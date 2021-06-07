@@ -138,7 +138,7 @@ if choice == "Riss 논문 수집(한글)":
 
 
     if st.button('Download Dataframe as CSV'):
-        tmp_download_link = download_link(df, 'YOUR_DF.csv', 'Click here to download your data!')
+        tmp_download_link = download_link(df, f'{keyword}.csv', 'Click here to download your data!')
         st.markdown(tmp_download_link, unsafe_allow_html=True)
     
 
@@ -205,11 +205,12 @@ elif choice == "Pubmed 논문 수집(영문)":
 
         return df1
     
-    df1 = get_pubmed()
+
 
     if st.checkbox("크롤링 시작!"):
         
         st.write("**논문 제목, 저자, 저널인용횟수, PMID, 상세링크** 정보를 수집합니다.")
+        df1 = get_pubmed()
         
         st.dataframe(df1)
         st.balloons()
@@ -229,10 +230,9 @@ elif choice == "Pubmed 논문 수집(영문)":
         return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
 
 
-    st.write(df1)
-    
+   
     st.write("csv 파일로 저장")
 
     if st.button('Download Dataframe as CSV'):
-        tmp_download_link = download_link(df1, 'YOUR_DF.csv', 'Click here to download your data!')
+        tmp_download_link = download_link(df1, f'{keyword1}.csv', 'Click here to download your data!')
         st.markdown(tmp_download_link, unsafe_allow_html=True)
