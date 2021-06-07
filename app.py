@@ -19,10 +19,11 @@ st.sidebar.header('메뉴를 선택하세요')
 menu1 = ["Riss 논문 수집(한글)", "Pubmed 논문 수집(영문)"]
 choice = st.sidebar.selectbox("Menu",menu1)
 
+st.title("논문 데이터 자동 수집 어플리케이션")
 
 if choice == "Riss 논문 수집(한글)":
-    st.title("논문 데이터 자동 수집 어플리케이션")
-    st.subheader("Web App for Crawling Academic Papers")
+
+    st.subheader("riss에서 국내학술논문을 수집하여 파일로 저장할 수 있어요")
 
     expander_bar = st.beta_expander("Quick Guide")
     expander_bar.markdown("""
@@ -143,6 +144,8 @@ if choice == "Riss 논문 수집(한글)":
     
 
 elif choice == "Pubmed 논문 수집(영문)":
+    
+    st.subheader("Pubmed에서 해외학술논문을 수집하여 파일로 저장할 수 있어요")
     
         
 
