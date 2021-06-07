@@ -1,14 +1,10 @@
+
 import streamlit as st
 
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import font_manager, rc
-
 import requests
 from bs4 import BeautifulSoup as bs
 import base64
-
-
 import time
 
 
@@ -20,25 +16,20 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 st.sidebar.header('메뉴를 선택하세요')
-menu1 = ["Riss 논문 수집(한글)", "Word Cloud", "Topic Modeling", "Pubmed 논문 수집(영문)"]
+menu1 = ["Riss 논문 수집(한글)", "Pubmed 논문 수집(영문)"]
 choice = st.sidebar.selectbox("Menu",menu1)
-# menu2 = ["Pubmed 논문 수집(Eng)"]
-# choice = st.sidebar.selectbox("Menu",menu2)
+
 
 if choice == "Riss 논문 수집(한글)":
     st.title("논문 데이터 자동 수집 어플리케이션")
-    st.subheader("Web App for Crawling Academic Papers and Data Analysis")
-    st.markdown("""
-        #### --- 누구나 쉽게 자신만의 데이터분석 웹 어플리케이션을 만들 수 있다.
+    st.subheader("Web App for Crawling Academic Papers")
 
-        """)
     expander_bar = st.beta_expander("Quick Guide")
     expander_bar.markdown("""
     1. 왼쪽 사이드바 메뉴에서 서비스 메뉴를 선택할 수 있습니다. 
     2. 먼저 논문 정보 수집을 선택한 후, 검색어와 수집할 논문개수를 입력합니다. 
     3. 수집된 논문은 Pandas DataFrame으로 볼 수 있고, csv 파일로 저장할 수 있습니다.
-    4. 워드클라우드와 토픽모델링 메뉴에서는 저장한 파일을 업로드하여 결과를 확인해볼 수 있습니다. (한글논문만)
-
+   
     ** 본 서비스는 교육/연구용으로 제공되는 것으로 결과에 대해 어떠한 책임도 지지 않습니다. 
     저작권에 대한 책임도 이용자 본인에게 있습니다.**
     """)
@@ -131,200 +122,25 @@ if choice == "Riss 논문 수집(한글)":
         st.dataframe(df)
         st.balloons()
         st.success("논문 수집에 성공하였습니다.")
-        
-    st.write("4. 빈도 분석 시각화")
-    
-    st.text("발행연도, 저자, 발행기관별로 빈도수를 분석합니다.! ")
-    
-    counts = st.selectbox('Select Columns',('select','year','writer','society'))
- 
-
-    font_path = "./font/NanumGothic.ttf"
-
-    font_name = font_manager.FontProperties(fname=font_path).get_name()
-    rc('font', family=font_name)
-
-    if counts=="select":
-        pass
-
-    if counts=="writer":
-        st.write(df["writer"].value_counts())
-        df['writer'].value_counts().head(10).plot(kind="barh")
-        st.pyplot()
-
-    if counts=="year":
-        st.write(df["year"].value_counts())
-        df['year'].value_counts().head(10).plot(kind="pie", label='', autopct='%.1f%%', shadow=True, cmap="rainbow", counterclock=False, startangle=90)
-        st.pyplot()
-
-    if counts=="society":
-        st.write(df["society"].value_counts())
-        df['society'].value_counts().head(5).plot(kind="pie", label='', autopct='%.1f%%', shadow=True, cmap="Blues", counterclock=False, startangle=90)
-        st.pyplot()
-        
-     
-    st.write("5. csv 파일로 저장")
-    st.text("파일 이름은 '키워드+논문개수'로 자동 생성됩니다 예)'인공지능10.csv")
-    
-#     def get_table_download_link(df):
-
-#         csv = df.to_csv(index=False)
-#         b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-#         href = f'<a href="data:file/csv;base64,{b64}" download="file.csv">Download csv file</a>'
-#         return href
+  
+    st.write("4. csv 파일로 저장")
    
-    if st.checkbox("논문 저장"):
-        
-        select=st.radio('어떤 파일로 저장할까요?', ['그냥 안할래요', 'excel파일','csv파일','둘 다'])
+    @st.cache
+    def download_link(object_to_download, download_filename, download_link_text):
 
-        if select == 'excel파일':
-            df.to_excel(f'{keyword}{number}.xlsx', index=False)
+        if isinstance(object_to_download,pd.DataFrame):
+            object_to_download = object_to_download.to_csv(index=False)
 
-        elif select == 'csv파일':
-            df.to_csv(f'{keyword}{number}.csv', index=False)
+        # some strings <-> bytes conversions necessary here
+        b64 = base64.b64encode(object_to_download.encode()).decode()
 
-        elif select == '둘 다':
-            df.to_csv(f'{keyword}{number}.csv', index=False)
-            df.to_excel(f'{keyword}{number}.xlsx', index=False)
-        else :
-            pass
+        return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
 
-#         st.markdown(get_table_download_link(df), unsafe_allow_html=True)
- 
 
-    st.write("저장된 파일을 확인하시고, 사이드 메뉴에서 워드클라우드도 시도해보세요!! :sunglasses:")
+    if st.button('Download Dataframe as CSV'):
+        tmp_download_link = download_link(df, 'YOUR_DF.csv', 'Click here to download your data!')
+        st.markdown(tmp_download_link, unsafe_allow_html=True)
     
-elif choice == "Word Cloud":
-    
-    st.write("### 크롤링으로 저장한 csv파일을 불러와서 분석을 시작해봅시다! ###")
-    data_file = st.file_uploader("Upload CSV",type=['csv'])
-
-    if data_file is not None:
-        df = pd.read_csv(data_file)
-        st.dataframe(df)
-
-
-    if st.checkbox("단어 빈도수 분석"):
-
-        st.text("제목에서 사용된 단어 분석 : 상위 50개 명사 출력")
-
-        from konlpy.tag import Okt  
-        okt=Okt() 
-
-        title = df["title"]
-
-        nouns=[]
-        stop_words=''
-        for words in title: 
-            for noun in okt.nouns(words):
-                if noun not in stop_words and len(noun)>1: 
-                    nouns.append(noun) 
-
-
-        from collections import Counter
-
-        num_top_nouns = 50
-        nouns_counter = Counter(nouns)
-        top_nouns = dict(nouns_counter.most_common(num_top_nouns))
-        st.text (top_nouns)
-
-        st.text("텍스트분석에서 제거할 단어, 즉 불필요한 단어를 띄어쓰기 기준으로 적어주세요.")
-
-        nouns=[]
-        stop_words= st.text_input("불용어: ")
-
-
-        for words in title: 
-            for noun in okt.nouns(words):
-                if noun not in stop_words and len(noun)>1: 
-                    nouns.append(noun) 
-
-        num_top_nouns = 200
-        nouns_counter = Counter(nouns)
-        top_nouns = dict(nouns_counter.most_common(num_top_nouns))
-
-
-    if st.checkbox("WordCloud 생성"):
-        
-        bg_color = st.selectbox("배경색을 선택하세요",['white','yellow','green','grey', 'black'])
-    
-        max_number = st. slider("최대 글자 수를 설정해보세요.", 50, 200)
-        
-        
-        random_number = st.slider("슬라이드를 움직여 바뀌는 그림을 확인해보세요.",0,100)
-
-
-        wordcloud = WordCloud (
-        max_words= max_number,  
-        background_color = bg_color,  
-        random_state = random_number,
-
-        font_path = "./font/NanumBarunGothic.ttf")
-
-        wc = wordcloud.generate_from_frequencies(top_nouns)
-        fig = plt.figure(figsize=(6,6))
-        plt.imshow(wc, interpolation="bilinear")     
-        plt.axis('off')    ## 가로, 세로축을 별도로 표시하지 않음.
-        # plt.savefig('bts.png')    ## 그림을 저장함.
-        st.pyplot()
-        
-
-
-elif choice == "Topic Modeling":
-    
-
-    
-    st.write("### 토픽모델링을 시작해봅시다! ###")
-    data_file = st.file_uploader("Upload CSV",type=['csv'])
-    
-    if data_file is not None:
-        df = pd.read_csv(data_file)
-        st.dataframe(df)
-
-
-    if st.checkbox("토픽모델링"):  
-        
-        from konlpy.tag import Okt  
-
-        import gensim.corpora as corpora
-        from gensim.models.ldamodel import LdaModel 
-
-        okt=Okt() 
-
-        title_text = df.title
-
-        stop_words=""
-
-        tokenized_corpus=[]
-
-        for words in title_text: 
-            title_nouns = [] 
-            for noun in okt.nouns(words):
-                if noun not in stop_words and len(noun)>1: 
-                    title_nouns.append(noun)
-
-            tokenized_corpus.append(title_nouns)
-
-
-        dictionary = corpora.Dictionary(tokenized_corpus)
-        corpus = [dictionary.doc2bow(text) for text in tokenized_corpus]
-        
-        import gensim
-        model = gensim.models.ldamodel.LdaModel(corpus=corpus, id2word=dictionary, num_topics=7)
-        st.write(model.print_topics())
-
-
-    if st.checkbox("토픽모델링 시각화"):  
-
-        import pyLDAvis
-        import pyLDAvis.gensim as gensimvis
-        prepared_data = gensimvis.prepare(model, corpus, dictionary)
-    #         pyLDAvis.display(prepared_data)
-
-        html_string = pyLDAvis.prepared_data_to_html(prepared_data)
-        from streamlit import components
-        components.v1.html(html_string, width=800, height=400, scrolling=True)
-
 
 elif choice == "Pubmed 논문 수집(영문)":
     
@@ -399,24 +215,24 @@ elif choice == "Pubmed 논문 수집(영문)":
         st.balloons()
         st.success("논문 수집에 성공하였습니다.")
         
-    st.write("파일로 저장")
-    st.text("파일 이름은 '키워드+논문개수'로 자동 생성됩니다 예)'인공지능10.csv")
+
+
+    @st.cache
+    def download_link(object_to_download, download_filename, download_link_text):
+ 
+        if isinstance(object_to_download,pd.DataFrame):
+            object_to_download = object_to_download.to_csv(index=False)
+
+        # some strings <-> bytes conversions necessary here
+        b64 = base64.b64encode(object_to_download.encode()).decode()
+
+        return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
+
+
+    st.write(df1)
     
+    st.write("csv 파일로 저장")
 
-    if st.checkbox("논문 저장"):
-        
-        select=st.radio('어떤 파일로 저장할까요?', ['그냥 안할래요', 'excel파일','csv파일','둘 다'])
-
-        if select == 'excel파일':
-            df1.to_excel(f'{keyword1}{number1}.xlsx', index=False)
-
-        elif select == 'csv파일':
-            df1.to_csv(f'{keyword1}{number1}.csv', index=False)
-
-        elif select == '둘 다':
-            df1.to_csv(f'{keyword1}{number1}.csv', index=False)
-            df1.to_excel(f'{keyword1}{number1}.xlsx', index=False)
-        else :
-            pass
-
-    
+    if st.button('Download Dataframe as CSV'):
+        tmp_download_link = download_link(df1, 'YOUR_DF.csv', 'Click here to download your data!')
+        st.markdown(tmp_download_link, unsafe_allow_html=True)
