@@ -34,7 +34,7 @@ if choice == "Riss 논문 수집(한글)":
     ** 본 서비스는 교육/연구용으로 제공되는 것으로 결과에 대해 어떠한 책임도 지지 않습니다. 
     저작권에 대한 책임도 이용자 본인에게 있습니다.**
     """)
-    
+    expander_bar.video('https://youtu.be/ch83Zvl2icM') 
     
     st.write("1. 검색 키워드 입력")
     
