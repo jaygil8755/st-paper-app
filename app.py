@@ -36,8 +36,7 @@ if choice == "Riss 논문 수집(한글)":
     """)
     expander_bar.video('https://youtu.be/ch83Zvl2icM') 
     
-    st.write("1. 검색 키워드 입력")
-    
+    st.write("1. 검색 키워드 입력")    
 
     keyword = st.text_input("검색할 논문의 키워드를 입력하세요(예:로봇, 인공지능+교육): ")
     if st.checkbox("검색 결과 확인!"):
@@ -239,3 +238,14 @@ elif choice == "Pubmed 논문 수집(영문)":
     if st.button('Download Dataframe as CSV'):
         tmp_download_link = download_link(df1, f'{keyword1}.csv', 'Click here to download your data!')
         st.markdown(tmp_download_link, unsafe_allow_html=True)
+       
+    
+# ---- HIDE STREAMLIT STYLE ----
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
