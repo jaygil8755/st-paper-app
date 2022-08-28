@@ -69,7 +69,7 @@ if choice == "Riss 논문 수집(한글)":
 
         title =[]
         writer = []
-        society = []
+        publisher = []
         year = []
         journal = []
         link =[]
@@ -84,7 +84,7 @@ if choice == "Riss 논문 수집(한글)":
             writer_temp = cont.find('span', class_ = 'writer').text
             writer.append(writer_temp)
 
-            society.append(cont.find('span', class_ = 'assigned').text)
+            publisher.append(cont.find('span', class_ = 'assigned').text)
 
             year.append(cont.find('p', class_='etc').find_all('span')[2].text)  # <p class='etc'>에서 3번째 span tag에 있는 텍스트
 
@@ -101,7 +101,7 @@ if choice == "Riss 논문 수집(한글)":
         df = pd.DataFrame(
             {"title":title,
              "writer":writer,
-             "society":society,
+             "publisher":publisher,
              "year":year,
              "journal":journal,
              "link":link,
