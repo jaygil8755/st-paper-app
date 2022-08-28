@@ -54,7 +54,12 @@ if choice == "Riss 논문 수집(한글)":
             
     st.write("2. 검색할 논문 개수 입력")
 
-    number= st.text_input("이 중 몇 개를 가져올까요?(최대 1,000개):")
+    max_num_str = "".join(max_num.split(','))
+    max_int = int(max_num_str)      
+    if max_int > 1000:
+        max_int = 1000
+    number = st.slider('이 중 몇 개를 가져올까요??(최대 1,000개)', min_value=100, max_value= max_int, step=100)
+        
     st.text("아래 크롤링 시작! 버튼을 클릭하면 크롤링이 시작되고 잠시 후 결과가 나타납니다.!""")
     
     @st.cache
