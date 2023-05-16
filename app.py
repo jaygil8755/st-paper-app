@@ -334,7 +334,7 @@ if choose == "LDA TM":
         st.markdown('한글 제목과 초록만 추출하여 저장하기')
             
         #df_with_abs = df[df.abstracts != 'No_Abstracts']        
-        df_text = df.loc[:, [title, abstracts]]
+        df_text = df.loc[:, ['title', 'abstracts']]
         df_kor_text = df_text.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
         
         text = df_kor_text.to_list()
