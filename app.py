@@ -506,7 +506,6 @@ if choose == "Bertopic":
         df = pd.read_csv(uploaded_file)
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
-        st.write('키워드는', keyword)
            
 #         df_with_abs = df[df.abstracts != 'No_Abstracts']
 #         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
@@ -520,6 +519,8 @@ if choose == "Bertopic":
 
         extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
         stopwords = Stopwords()
+        stopwords.add(('토픽', 'NNG'))
+        stopwords.add(('모델링', 'NNG'))
         
         class CustomTokenizer:
             def __init__(self, kiwi):
