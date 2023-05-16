@@ -330,31 +330,34 @@ if choose == "LDA TM":
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
     
-        st.write('초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
+        st.markdown('### 초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
             
         df_with_abs = df[df.abstracts != 'No_Abstracts']
         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
     
         text = df_with_abs.to_list()
         st.write('초록이 있는 논문 수', len(text))  
-        st.write('처음 3개 text', text[:3])
+        st.write('[확인] 처음 3개 text 시예시', text[:3])
    
         if st.button('워드 클라우드'):
     
             with st.spinner('초록에서 명사를 추출하고있습니다.....'): 
     
-                tokenized_doc=[]
                 kiwi=Kiwi() 
-    
-                for word in text:
+                extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
+                stopwords = Stopwords()
+          
+                tokenized_doc=[]
+                for words in text:
                     nouns_ = [] 
-                    stop_words=''
-                    for noun in okt.nouns(word):
-                        if noun not in stop_words and len(noun)>1: 
-                            nouns_.append(noun) 
-    
+                    for word in kiwi.tokenize(words,  stopwords=stopwords):
+                        if word[1] in extract_pos_list and len(word[0]) > 1 :
+                            nouns_.append(word[0])     
                     tokenized_doc.append(nouns_)
-        #     st.write('첫번째 논문에 등장하는 단어들은', tokenized_doc[0:1])
+        
+            st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+            st.write('[확인] 두번째 논문에 등장하는 단어들은', tokenized_doc[1])
+        
     
             dictionary = corpora.Dictionary(tokenized_doc)
             dictionary.filter_extremes(no_below=5, no_above=0.5)
