@@ -99,16 +99,20 @@ if choose == "Crawl":
             max_num1 = soup1.find('span', class_='num').text
             max_num1= max_num1.replace(',','')
             #print(f'총 {max_num1}개의 학술논문이 검색되었습니다.')
-            #st.markdown(f'총 {max_num1}개의 학술논문이 검색되었습니다.')
+            #st.markdown(f'총 {max_num1}개의 학술논문이 검색되었습니다.')         
+        else :
+          print('다음에 다시 시도해주세요')
     
         if result2.status_code == 200:
             soup2 = bs(result2.text, 'html.parser')
             max_num2 = soup2.find('span', class_='num').text
             max_num2= max_num2.replace(',','')
             #print(f'총 {max_num2}개의 학위논문이 검색되었습니다.')
+        else :
+          print('다음에 다시 시도해주세요')
+        
         st.info(f'총 {max_num1}개의 학술논문과 {max_num2}개의 학위논문이 검색되었습니다.')
     
-
     if st.button('크롤링 시작') :
         
         with st.spinner('논문을 수집하고 있습니다....'):
@@ -502,13 +506,15 @@ if choose == "Bertopic":
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
            
-        df_with_abs = df[df.abstracts != 'No_Abstracts']
-        df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
+#         df_with_abs = df[df.abstracts != 'No_Abstracts']
+#         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
     
-        text = df_with_abs.to_list()
-        st.write('초록이 있는 논문 수', len(text))
+#         text = df_with_abs.to_list()
+        text = df.title.to_list()
+#         st.write('초록이 있는 논문 수', len(text))
     
         # 토크나이저에 명사만 추가한다
+        st.write('명사를 추출합니다..')
         extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
         stopwords = Stopwords()
         
@@ -529,22 +535,22 @@ if choose == "Bertopic":
 
         with st.expander('xlm-r-100langs-bert 모델'):
             
-            st.write('시작...')
+            st.spinner('학습 시작...')
     
-            model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
-            vectorizer_model=vectorizer,
-            nr_topics=10, # 문서를 대표하는 토픽의 갯수
-            top_n_words=10,
-            calculate_probabilities=True)
-            
-            # tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
-            # model = AutoModel.from_pretrained("beomi/kcbert-base")
-            
-            # model1 = BERTopic(embedding_model=model, language="korean", 
-            #                   # top_n_words=10, nr_topics= Nr_topics, 
-            #                   calculate_probabilities=False, verbose=False)
-            # model1.fit(text)
-            topics, probs = model1.fit_transform(text)
+              model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
+              vectorizer_model=vectorizer,
+              nr_topics=10, # 문서를 대표하는 토픽의 갯수
+              top_n_words=10,
+              calculate_probabilities=True)
+
+              # tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
+              # model = AutoModel.from_pretrained("beomi/kcbert-base")
+
+              # model1 = BERTopic(embedding_model=model, language="korean", 
+              #                   # top_n_words=10, nr_topics= Nr_topics, 
+              #                   calculate_probabilities=False, verbose=False)
+              # model1.fit(text)
+              topics, probs = model1.fit_transform(text)
         
             st.dataframe(model1.get_topic_info())
             st.header("Visualizations")
