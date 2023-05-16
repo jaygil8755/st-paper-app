@@ -331,14 +331,16 @@ if choose == "LDA TM":
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
     
-        st.markdown('#### 초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
+#         st.markdown('#### 초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
             
-        df_with_abs = df[df.abstracts != 'No_Abstracts']
-        df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
+#         df_with_abs = df[df.abstracts != 'No_Abstracts']
+#         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
     
-        text = df_with_abs.to_list()
-        st.write('초록이 있는 논문 수', len(text))  
-        st.write('[확인] 처음 3개 text 시예시', text[:3])
+#         text = df_with_abs.to_list()
+#         st.write('초록이 있는 논문 수', len(text))  
+#         st.write('[확인] 처음 3개 text 시예시', text[:3])
+        
+        text= df.text.to_list()
    
         if st.button('워드 클라우드'):
     
@@ -359,7 +361,7 @@ if choose == "LDA TM":
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
 
             dictionary = corpora.Dictionary(tokenized_doc)
-            dictionary.filter_extremes(no_below=3, no_above=0.3)
+            dictionary.filter_extremes(no_below=5, no_above=0.5)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
     
             st.session_state.tokenized_doc = tokenized_doc
