@@ -331,16 +331,16 @@ if choose == "LDA TM":
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
     
-#         st.markdown('#### 초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
+        st.markdown('#### 초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
             
-#         df_with_abs = df[df.abstracts != 'No_Abstracts']
-#         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
-    
-#         text = df_with_abs.to_list()
-#         st.write('초록이 있는 논문 수', len(text))  
-#         st.write('[확인] 처음 3개 text 시예시', text[:3])
+        df_with_abs = df[df.abstracts != 'No_Abstracts']
+        df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
+        text = df.title + " " + df_with_abs
+        text = text.to_list()
+        st.write('초록이 있는 논문 수', len(text))  
+        st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
         
-        text= df.title.to_list()
+#         text= df.title.to_list()
    
         if st.button('워드 클라우드'):
     
