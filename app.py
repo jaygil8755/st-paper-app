@@ -532,9 +532,10 @@ if choose == "Bertopic":
          
         custom_tokenizer = CustomTokenizer(Kiwi())
         vectorizer = CountVectorizer(tokenizer=custom_tokenizer, max_features=300)
+        st.write('CountVertorizer  생성 완료!', vectorizer)
 
         with st.expander('xlm-r-100langs-bert 모델'):
-          with st.spinner('LDA 모델 훈련 중 ...'):
+          with st.spinner('BERTopic 모델 훈련 중 ...'):
             model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
             vectorizer_model=vectorizer,
             nr_topics=10, # 문서를 대표하는 토픽의 갯수
@@ -554,11 +555,11 @@ if choose == "Bertopic":
             st.header("Visualizations")
 
 
-            st.plotly_chart(model.visualize_topics())
-            st.plotly_chart(model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-            st.plotly_chart(model.visualize_heatmap())
-            st.plotly_chart(model.visualize_hierarchy())
-            st.plotly_chart(model.visualize_term_rank())
+            st.plotly_chart(model1.visualize_topics())
+            st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+            st.plotly_chart(model1.visualize_heatmap())
+            st.plotly_chart(model1.visualize_hierarchy())
+            st.plotly_chart(model1.visualize_term_rank())
     
             # with st.expander('beomi/kcbert-base 모델'):
                 
