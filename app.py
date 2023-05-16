@@ -337,19 +337,18 @@ if choose == "LDA TM":
     
         text = df_with_abs.to_list()
         st.write('초록이 있는 논문 수', len(text))  
+        st.write('처음 3개 text', text[:3])
    
         if st.button('워드 클라우드'):
     
             with st.spinner('초록에서 명사를 추출하고있습니다.....'): 
     
                 tokenized_doc=[]
-                okt=Okt() 
+                kiwi=Kiwi() 
     
                 for word in text:
                     nouns_ = [] 
                     stop_words=''
-        #             stop_words='토픽 모델링 토픽모델링 논문 연구 또한 참고문헌 관련 기반 위해 대한 대해 첫째 둘째 통한 통해 위한'
-        #             stop_words=stop_words.split(' ')
                     for noun in okt.nouns(word):
                         if noun not in stop_words and len(noun)>1: 
                             nouns_.append(noun) 
