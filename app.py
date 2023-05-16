@@ -377,27 +377,27 @@ if choose == "LDA TM":
                 with left_column:
                     wordcloud = WordCloud (max_words= 200,background_color = "white", random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig = plt.figure()
+                    fig11 = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
                     plt.axis('off')    
-                    left_column.pyplot(fig)
+                    left_column.pyplot(fig11)
     
     
                 with middle_column:
                     wordcloud = WordCloud (max_words= 300,background_color = "black", random_state = 21,font_path = "./font/NanumGothic.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig = plt.figure()
+                    fig12 = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
                     plt.axis('off')     
-                    middle_column.pyplot(fig)
+                    middle_column.pyplot(fig12)
     
                 with right_column:
                     wordcloud = WordCloud (max_words= 300,background_color = "white", random_state = 22,font_path = "./font/NanumPen.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig = plt.figure()
+                    fig13 = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
                     plt.axis('off')     
-                    right_column.pyplot(fig)
+                    right_column.pyplot(fig13)
     
     
     
