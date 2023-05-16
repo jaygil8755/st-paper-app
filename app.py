@@ -514,7 +514,7 @@ if choose == "Bertopic":
 #         st.write('초록이 있는 논문 수', len(text))
     
         # 토크나이저에 명사만 추가한다
-        st.write('명사를 추출합니다..')
+#         st.write('명사를 추출합니다..')
         extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
         stopwords = Stopwords()
         
@@ -532,7 +532,7 @@ if choose == "Bertopic":
          
         custom_tokenizer = CustomTokenizer(Kiwi())
         vectorizer = CountVectorizer(tokenizer=custom_tokenizer, max_features=300)
-        st.write('CountVertorizer  생성 완료!', vectorizer)
+#         st.write('CountVertorizer  생성 완료!', vectorizer)
 
         with st.expander('xlm-r-100langs-bert 모델'):
           with st.spinner('BERTopic 모델 훈련 중 ...'):
