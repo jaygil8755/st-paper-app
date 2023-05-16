@@ -297,7 +297,7 @@ if choose == "Analyze":
 
             freq = df['publisher'].value_counts().head(20)
             fig2_2 = px.pie(freq, 
-                      # values='publisher', 
+                      values='publisher', 
                       names=freq.index, 
                       title='학회/학교별 논문 수')
     
