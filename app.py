@@ -357,9 +357,7 @@ if choose == "LDA TM":
                     tokenized_doc.append(nouns_)
         
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
-            st.write('[확인] 모든 단어의 수는' ㅣ)
-       
-    
+
             dictionary = corpora.Dictionary(tokenized_doc)
             #dictionary.filter_extremes(no_below=5, no_above=0.5)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
