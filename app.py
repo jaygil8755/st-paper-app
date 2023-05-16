@@ -296,7 +296,7 @@ if choose == "Analyze":
         with st.expander('publisher pie chart - 상위 빈도 20개'):
 
             freq = df['publisher'].value_counts().head(20)
-            fig2_2 = px.pie(freq, 
+            fig2_2 = px.pie(values=freq, 
                       names=freq.index, 
                       title='학회/학교별 논문 수')
     
