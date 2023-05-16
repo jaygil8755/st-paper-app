@@ -341,7 +341,7 @@ if choose == "LDA TM":
   
         if st.button('워드 클라우드'):
     
-            with st.spinner('초록에서 명사를 추출하고있습니다.....'): 
+            with st.spinner('텍스트에서 명사를 추출하고있습니다.....'): 
     
                 kiwi=Kiwi() 
                 extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
@@ -364,7 +364,6 @@ if choose == "LDA TM":
             st.session_state.tokenized_doc = tokenized_doc
             st.session_state.dictionary = dictionary
             st.session_state.text = text
-    
     
             with st.expander('3개의 워드클라우드를 생성'):
     
