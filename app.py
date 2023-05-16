@@ -506,7 +506,7 @@ if choose == "Bertopic":
         df = pd.read_csv(uploaded_file)
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
-        st.write('키워드는', st.sesseion_state.keyword)
+        st.write('키워드는', keyword)
            
 #         df_with_abs = df[df.abstracts != 'No_Abstracts']
 #         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
