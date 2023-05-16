@@ -1,4 +1,5 @@
-
+from streamlit_option_menu import option_menu
+import streamlit.components.v1 as components
 import streamlit as st
 
 import pandas as pd
@@ -6,245 +7,598 @@ import requests
 from bs4 import BeautifulSoup as bs
 import base64
 import time
+import numpy as np
+import random
+from io import StringIO
 
+from kiwipiepy import Kiwi
+from kiwipiepy.utils import Stopwords
+from mecab import MeCab
+import konlpy    
+from konlpy.tag import Okt  
+import nltk
+from nltk.corpus import stopwords
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
-(KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'}
+from collections import Counter
+from wordcloud import WordCloud
+from sklearn.feature_extraction.text import CountVectorizer
 
-# st.set_page_config(layout='wide')
+from matplotlib import font_manager, rc
+import matplotlib
+matplotlib.rcParams['axes.unicode_minus'] = False
+import matplotlib.colors as mcolors
+import plotly.express as px
+import seaborn as sns
+font_path = "./font/NanumBarunGothic.ttf"
+font_name = font_manager.FontProperties(fname=font_path).get_name()
+rc('font', family=font_name)
+
+import pyLDAvis.gensim_models
+import regex
+import gensim
+from gensim import corpora
+from gensim.models import CoherenceModel
+from gensim.utils import simple_preprocess
+from gensim.models import LdaModel
+
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+from umap import UMAP
+
+from bertopic import BERTopic
+from sentence_transformers import SentenceTransformer
+from transformers import AutoTokenizer, AutoModel
+  
+st.set_page_config(layout='wide', page_title="crawling papers")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
+with st.sidebar:
+    choose = option_menu("App Menu", ["Crawl", "Analyze", "LDA TM", "Bertopic", "Contact"],
+                         icons=['box arrow in down', 'bar-chart', 'card-text', 'chat-text','person lines fill'],
+                         menu_icon="app-indicator", default_index=0,
+                         styles={
+        "container": {"padding": "5!important", "background-color": "#fafafa"},
+        "icon": {"color": "orange", "font-size": "25px"}, 
+        "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "#02ab21"},
+    }
+    )
 
-st.sidebar.header('메뉴를 선택하세요')
-menu1 = ["Riss 논문 수집(한글)", "Pubmed 논문 수집(영문)"]
-choice = st.sidebar.selectbox("Menu",menu1)
-
-st.title("논문 데이터 자동 수집 어플리케이션")
-
-if choice == "Riss 논문 수집(한글)":
-
-    st.subheader("riss에서 국내학술논문을 수집하여 파일로 저장할 수 있어요")
-
-    expander_bar = st.beta_expander("Quick Guide")
+if choose == "Crawl":
+    st.subheader("LLM 기반 연구 논문 분석 자동화 서비스")
+    st.markdown("""
+        #### 논문 크롤링 자동화 """)
+    expander_bar = st.expander("Quick Guide")
     expander_bar.markdown("""
-    1. 왼쪽 사이드바 메뉴에서 서비스 메뉴를 선택할 수 있습니다. 
-    2. 먼저 논문 정보 수집을 선택한 후, 검색어와 수집할 논문개수를 입력합니다. 
-    3. 수집된 논문은 Pandas DataFrame으로 볼 수 있고, csv 파일로 저장할 수 있습니다.
-   
+    1. 수집할 논문의 키워드를 입력하세요. 
+    2. RISS에서 수집된 논문 수를 확인하고 '크롤링 시작'을 체크하세요.
+    3. 국내학술논문과 석박사 논문을 크롤링합니다.(제목, 저자, 연도, 발행기관, 학술지, 상세링크, 초록이 수집됩니다.)
+    http://www.riss.kr/index.do
+    4. 수집된 논문을 Pandas 데이터프레임으로 확인하고 csv 파일로 저장합니다.
+    
     ** 본 서비스는 교육/연구용으로 제공되는 것으로 결과에 대해 어떠한 책임도 지지 않습니다. 
     저작권에 대한 책임도 이용자 본인에게 있습니다.**
     """)
-    expander_bar.video('https://youtu.be/ch83Zvl2icM') 
-    
-    st.write("1. 검색 키워드 입력")    
-
-    keyword = st.text_input("검색할 논문의 키워드를 입력하세요(예:로봇, 인공지능+교육): ")
-    if st.checkbox("검색 결과 확인!"):
-        url = f"http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&queryText=&strQuery={keyword}&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&p_year1=&p_year2=&iStartCount=0\
-        &orderBy=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&ccl_code=&inside_outside=&fric_yn=&image_yn=&gubun=&kdc=&ttsUseYn=&fsearchMethod=&sflag=1&isFDetailSearch=N&pageNumber=&resultKeyword=&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&icate=re_a_kor&colName=re_a_kor&pageScale=100\
-        &isTab=Y&regnm=&dorg_storage=&language=&language_code=&clickKeyword=&relationKeyword=&query={keyword}"
-        result = requests.get(url, headers=headers)
-        if result.status_code == 200:
-
-            soup = bs(result.content, 'html.parser')
-            max_num = soup.find('span', class_='num').text
-            st.text(f"총{max_num}개의 논문이 검색되었습니다. ")
-        else :
-            st.text("woops! 다음에 다시 시도해주세요.")
-            
-    st.write("2. 검색할 논문 개수 입력")
-
-    max_num_str = "".join(max_num.split(','))
-    max_int = int(max_num_str)      
-    if max_int > 1000:
-        max_int = 1000
-    number = st.slider('이 중 몇 개를 가져올까요??(최대 1,000개)', min_value=100, max_value= max_int, step=100)
+    keyword=st.text_input('검색할 논문의 키워드를 입력하세요(예:로봇, 인공지능+교육): ', key='keyword') 
+   
+    if keyword:
         
-    st.text("아래 크롤링 시작! 버튼을 클릭하면 크롤링이 시작되고 잠시 후 결과가 나타납니다.!""")
+        st.write(f'{keyword}에 대한 논문을 수집합니다.')    
     
-    @st.cache
-    def get_info():
+        HEADERS={'User-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'}
     
-        url = f"http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&queryText=&strQuery={keyword}&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&p_year1=&p_year2=&iStartCount=0&orderBy=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&ccl_code=&inside_outside=&fric_yn=&image_yn=&gubun=&kdc=&ttsUseYn=&fsearchMethod=&sflag=1&isFDetailSearch=N&pageNumber=&resultKeyword=&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&icate=re_a_kor&colName=re_a_kor&pageScale={number}&isTab=Y&regnm=&dorg_storage=&language=&language_code=&clickKeyword=&relationKeyword=&query={keyword}"
+        url1 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=bib_t&colName=re_a_kor&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale=10&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}\&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
+        url2 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=re_a_kor&colName=bib_t&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale=10&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
+    
+        result1 = requests.get(url1, headers=HEADERS)
+        result2 = requests.get(url2, headers=HEADERS)
+    
+        if result1.status_code == 200:
+            soup1 = bs(result1.text, 'html.parser')
+            max_num1 = soup1.find('span', class_='num').text
+            max_num1= max_num1.replace(',','')
+            #print(f'총 {max_num1}개의 학술논문이 검색되었습니다.')
+            #st.markdown(f'총 {max_num1}개의 학술논문이 검색되었습니다.')
+    
+        if result2.status_code == 200:
+            soup2 = bs(result2.text, 'html.parser')
+            max_num2 = soup2.find('span', class_='num').text
+            max_num2= max_num2.replace(',','')
+            #print(f'총 {max_num2}개의 학위논문이 검색되었습니다.')
+        st.info(f'총 {max_num1}개의 학술논문과 {max_num2}개의 학위논문이 검색되었습니다.')
+    
 
-
-        result = requests.get(url, headers=headers)
-        soup = bs(result.content, 'html.parser')
-        contents = soup.find_all('div', class_='cont')
-
-        title =[]
-        writer = []
+    if st.button('크롤링 시작') :
+        
+        with st.spinner('논문을 수집하고 있습니다....'):
+            url1 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=bib_t&colName=re_a_kor&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={max_num1}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}\&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
+            result1 = requests.get(url1, headers=HEADERS)
+            soup1 = bs(result1.text, 'html.parser')
+    
+            url2 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=re_a_kor&colName=bib_t&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={max_num2}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
+            result2 = requests.get(url2, headers=HEADERS)
+            soup2 = bs(result2.text, 'html.parser')
+    
+            contents1 = soup1.find_all('div', class_='cont ml60')
+            contents2 = soup2.find_all('div', class_='cont ml60')
+    
+            title = []
+            writer =[]
+            publisher = []
+            year = []
+            journal = []
+            link = []
+            abstracts = []
+    
+            for cont in contents1:
+                title.append(cont.find('p', class_='title').text)
+                writer.append(cont.find('span', class_='writer').text)
+                publisher.append(cont.find('span', class_='assigned').text)
+                year.append(cont.find('p', class_='etc').find_all('span')[2].text)
+                journal.append(cont.find('p', class_='etc').find_all('span')[3].text)
+                link.append("https://www.riss.kr"+cont.find('p', class_='title').find('a')['href'])
+    
+                if cont.find('p', class_='preAbstract'):
+                    abstracts.append(cont.find('p', class_='preAbstract').text)
+                else :
+                    abstracts.append('No_Abstracts')
+    
+            df1 = pd.DataFrame(
+            {'title':title,
+            'writer': writer,
+            'publisher': publisher,
+            'year': year,
+            'journal': journal,
+            'link': link,
+            'abstracts': abstracts}
+    )
+        st.balloons()
+        st.success("학술 논문 수집에 성공하였습니다.")
+    
+        st.dataframe(df1)        
+    
+        title = []
+        writer =[]
         publisher = []
         year = []
         journal = []
-        link =[]
-        abstracts=[]
-
-
-        for cont in contents:
-
-            title_temp = cont.find('p', class_='title').text
-            #print(title_temp)
-            title.append(title_temp)
-            writer_temp = cont.find('span', class_ = 'writer').text
-            writer.append(writer_temp)
-
-            publisher.append(cont.find('span', class_ = 'assigned').text)
-
-            year.append(cont.find('p', class_='etc').find_all('span')[2].text)  # <p class='etc'>에서 3번째 span tag에 있는 텍스트
-
+        link = []
+        abstracts = []
+    
+        for cont in contents2:
+            title.append(cont.find('p', class_='title').text)
+            writer.append(cont.find('span', class_='writer').text)
+            publisher.append(cont.find('span', class_='assigned').text)
+            year.append(cont.find('p', class_='etc').find_all('span')[2].text)
             journal.append(cont.find('p', class_='etc').find_all('span')[3].text)
-
-            link.append("http://www.riss.kr"+cont.find('p', class_='title').a['href']) # <p, class='title'>의 a 태그의 'href' 속성 값
-
-            if cont.find('p', class_='preAbstract') :
+            link.append("https://www.riss.kr"+cont.find('p', class_='title').find('a')['href'])
+    
+            if cont.find('p', class_='preAbstract'):
                 abstracts.append(cont.find('p', class_='preAbstract').text)
+            else :
+                abstracts.append('No_Abstracts')
+    
+        df2 = pd.DataFrame(
+        {'title':title,
+        'writer': writer,
+        'publisher': publisher,
+        'year': year,
+        'journal': journal,
+        'link': link,
+        'abstracts': abstracts}
+    )
+        st.balloons()
+        st.success("학위 논문 수집에 성공하였습니다.")
+    
+        st.dataframe(df2)
+        
+        st.write('학술 논문과 학위 논문을 하나로 만듭니다.')
+        df = pd.concat([df1,df2], ignore_index=True)
+    
+        st.dataframe(df)
+        if 'df' not in st.session_state:
+            st.session_state['df'] = df
+        st.session_state['df'] = df
+        
+        time.sleep(1)
+    
+    if st.checkbox ('키워드 미포함 또는 중복 데이터 삭제'):
+    
+        st.write('제목과 초록에 키워드가 없는 논문은 삭제합니다.')
+    #    keyword='토픽 ?모델링'
+        # 정규표현식으로 띄어쓰기가 0개 이상인 단어 찾기
+        keyword = keyword.replace(" ", " ?")
+        
+    #     df=df[(df['title'].str.contains(keyword))|(df['abstracts'].str.contains(keyword))] 
+        st.session_state['df']=st.session_state['df'][(st.session_state['df']['title'].str.contains(keyword))|(st.session_state['df']['abstracts'].str.contains(keyword))]
+    
+        time.sleep(1)   
+    
+        st.write('중복데이터를 검사합니다..')
+    
+        df_double = st.session_state['df'][st.session_state['df'].duplicated(subset=['title', 'writer'], keep=False)]
+        st.dataframe(df_double)
+        st.session_state['df'].drop_duplicates(subset= ['title', 'writer'], keep='first', inplace=True, ignore_index=True)
+    
+        st.write('중복데이터를 제거했습니다.')
+        st.write('최종 논문 수:', len(st.session_state['df']))
+    
+        st.dataframe(st.session_state['df'])
+    
+    if st.checkbox ('데이터 저장'):
+    
+        def convert_df(df):
+            # IMPORTANT: Cache the conversion to prevent computation on every rerun
+            return df.to_csv(index=False).encode('utf-8')
 
-            else:
-                abstracts.append("초록이 없습니다.")
+        csv = convert_df(st.session_state['df'])
 
-        df = pd.DataFrame(
-            {"title":title,
-             "writer":writer,
-             "publisher":publisher,
-             "year":year,
-             "journal":journal,
-             "link":link,
-            "abstracts":abstracts}
+        st.download_button(
+            label="Download data as CSV",
+            data=csv,
+            file_name=f'{keyword}.csv',
+            mime='text/csv',
         )
 
-        return df
-    
-    df = get_info()
-    
-    st.write("3. 검색 결과 확인")
+if choose == "Analyze":
+    st.header("논문데이터 분석과 시각화")
 
+    uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
+    if uploaded_file is not None:
+        bytes_data = uploaded_file.getvalue()
+        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+        string_data = stringio.read()
+        df = pd.read_csv(uploaded_file)
+
+        st.write('처음 5개 데이터')
+        st.dataframe(df.head())
+        st.write('마지막 5개 데이터')
+        st.dataframe(df.tail())
+        st.write('데이터의 기본 정보')
+        st.write(data.describe())
         
-    if st.checkbox("크롤링 시작!"):
+    st.markdown('**저자**에서 특정 단어를 포함하고 있는 논문만 검색할 수 있습니다. ')
+    keyword_writer =st.text_input('저자에 포함할 단어를 입력해주세요: ')
+    
+    if keyword_writer :
+        df_=df[df['writer'].str.contains(keyword_writer)]
+        st.write(f'총 {len(df_)}편이 검색되었습니다.')
+        st.dataframe(df[df['writer'].str.contains(keyword_writer)])
+    
+    st.markdown('**제목**에서 특정 단어를 포함하고 있는 논문만 검색할 수 있습니다. ')
+    keyword_title =st.text_input('제목에 포함할 단어를 입력해주세요: ')
+    
+    if keyword_title :
+        df_= df[df['title'].str.contains(keyword_title)]
+        st.write(f'총 {len(df_)}편이 검색되었습니다.')
+        st.dataframe(df[df['title'].str.contains(keyword_title)])
+    
+    st.markdown('**초록**에서 특정 단어를 포함하는 논문만 검색할 수 있습니다.')
+    keyword_abs =st.text_input('초록에 포함할 단어를 입력해주세요: ')
+    
+    if keyword_abs :
+        df_= df[df['abstracts'].str.contains(keyword_abs)]
+        st.write(f'총 {len(df_)}편이 검색되었습니다.')
+        st.dataframe(df[df['abstracts'].str.contains(keyword_abs)])
+    
+    vis_checked=st.checkbox('데이터 시각화')
+    
+    if vis_checked :
         
-        st.write("**논문 제목, 저자, 학회, 발행연도, 발행기관, 상세링크, 요약문**을 수집합니다.")
+        with st.expander('journal bar chart - 상위 빈도 20개'):
+      
+            fig1_1 = px.bar(df['journal'].value_counts().head(20), orientation='h', labels={'index': '학술지/학위', 'value': '논문 수'})
+            fig1_1.update_layout(showlegend=True, 
+                                 legend_title='학술지/학위별 논문수')
+
+            st.plotly_chart(fig1_1)
         
-        st.dataframe(df)
-        st.balloons()
-        st.success("논문 수집에 성공하였습니다.")
+        with st.expander('publisher pie chart - 상위 빈도 20개'):
+
+            freq = df['publisher'].value_counts().head(20)
+            fig2_2 = px.pie(freq, 
+                      # values='publisher', 
+                      names=freq.index, 
+                      title='학회/학교별 논문 수')
+    
+            fig2_2.update_traces(textposition='inside', 
+                           textinfo='percent+label', 
+                           marker=dict(colors=px.colors.sequential.YlGnBu))
+    
+            st.plotly_chart(fig2_2)
+        
+        with st.expander('year histogram'):
+
+            fig3_3 = px.histogram(df, 
+                             x='year', 
+                             nbins=25, 
+                             color_discrete_sequence=['pink'], 
+                             title='연도별 논문 수',
+                             labels={'year': '발행 연도', 'count': '발행 논문수'})
+    
+            st.plotly_chart(fig3_3)
+
+if choose == "LDA TM":
   
-    st.write("4. csv 파일로 저장")
    
-    @st.cache
-    def download_link(object_to_download, download_filename, download_link_text):
-
-        if isinstance(object_to_download,pd.DataFrame):
-            object_to_download = object_to_download.to_csv(index=False)
-
-        # some strings <-> bytes conversions necessary here
-        b64 = base64.b64encode(object_to_download.encode()).decode()
-
-        return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
-
-
-    if st.button('Download Dataframe as CSV'):
-        tmp_download_link = download_link(df, f'{keyword}.csv', 'Click here to download your data!')
-        st.markdown(tmp_download_link, unsafe_allow_html=True)
+    st.header('LDA 토픽모델링')
+    uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
+    if uploaded_file is not None:
+        bytes_data = uploaded_file.getvalue()
+        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+        string_data = stringio.read()
+        df = pd.read_csv(uploaded_file)
+        st.write('처음 5개 데이터 확인')
+        st.dataframe(df.head())
     
-
-elif choice == "Pubmed 논문 수집(영문)":
+        st.write('초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
+            
+        df_with_abs = df[df.abstracts != 'No_Abstracts']
+        df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
     
-    st.subheader("Pubmed에서 해외학술논문을 수집하여 파일로 저장할 수 있어요")
-    
-        
-
-    keyword1 = st.text_input("검색할 논문의 키워드를 입력하세요(예:corona19): ")
-    number1 = st.number_input("검색할 논문의 개수를 입력하세요: ", min_value=10, max_value=1000, step=10)
-    number1 =  int(number1/10)
-    
-    if st.checkbox("검색 결과 확인!"):
-    
-        url = f'https://pubmed.ncbi.nlm.nih.gov/?term={keyword1}&page={number1}'
-        result = requests.get(url, headers=headers)
-        if result.status_code == 200:
-
-            st.success("이제, 논문 크롤링을 할 수 있습니다.")
-        else :
-            st.text("woops! 다음에 다시 시도해주세요.")
-
- 
-    
-    @st.cache
-    def get_pubmed():
-    
-        url = f'https://pubmed.ncbi.nlm.nih.gov/?term={keyword1}&page={number1}'
-
-        result = requests.get(url, headers=headers)
-        soup = bs(result.content, 'html.parser')
-        
-
-        title =[]
-        author = []
-        journal_citation = []
-        PMID = []
-        link = []
-
-        for i in range(1, number1+1):
-
-            url = f'https://pubmed.ncbi.nlm.nih.gov/?term={keyword1}&page={number1}'
-            result = requests.get(url, headers=headers)
-            soup = bs(result.content, 'html.parser')
-            contents = soup.find_all('div', class_='docsum-content')
-
-            for info in contents:
-
-                title.append(info.find('a', class_="docsum-title").text.strip()) 
-                author.append(info.find('span', class_='docsum-authors short-authors').text.strip())
-                journal_citation.append(info.find('span', class_='docsum-journal-citation full-journal-citation').text.strip())
-                PMID.append(info.find('span', class_="citation-part").text.strip().split(':')[1].strip())
-                link.append("https://pubmed.ncbi.nlm.nih.gov/"+info.find('a',class_="docsum-title")['href'])
-
-            time.sleep(0.5)
-
-
-        df1 = pd.DataFrame(
-                {"title":title,
-                 "author":author,
-                 "journal_citation":journal_citation,
-                 "PMID":PMID,
-                 "link":link}
-            )
-
-        return df1
-    
-
-
-    if st.checkbox("크롤링 시작!"):
-        
-        st.write("**논문 제목, 저자, 저널인용횟수, PMID, 상세링크** 정보를 수집합니다.")
-        df1 = get_pubmed()
-        
-        st.dataframe(df1)
-        st.balloons()
-        st.success("논문 수집에 성공하였습니다.")
-        
-
-
-    @st.cache
-    def download_link(object_to_download, download_filename, download_link_text):
- 
-        if isinstance(object_to_download,pd.DataFrame):
-            object_to_download = object_to_download.to_csv(index=False)
-
-        # some strings <-> bytes conversions necessary here
-        b64 = base64.b64encode(object_to_download.encode()).decode()
-
-        return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
-
-
+        text = df_with_abs.to_list()
+        st.write('초록이 있는 논문 수', len(text))  
    
-    st.write("csv 파일로 저장")
+        if st.button('워드 클라우드'):
+    
+            with st.spinner('초록에서 명사를 추출하고있습니다.....'): 
+    
+                tokenized_doc=[]
+                okt=Okt() 
+    
+                for word in text:
+                    nouns_ = [] 
+                    stop_words=''
+        #             stop_words='토픽 모델링 토픽모델링 논문 연구 또한 참고문헌 관련 기반 위해 대한 대해 첫째 둘째 통한 통해 위한'
+        #             stop_words=stop_words.split(' ')
+                    for noun in okt.nouns(word):
+                        if noun not in stop_words and len(noun)>1: 
+                            nouns_.append(noun) 
+    
+                    tokenized_doc.append(nouns_)
+        #     st.write('첫번째 논문에 등장하는 단어들은', tokenized_doc[0:1])
+    
+            dictionary = corpora.Dictionary(tokenized_doc)
+            dictionary.filter_extremes(no_below=5, no_above=0.5)
+            st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
+    
+            st.session_state.tokenized_doc = tokenized_doc
+            st.session_state.dictionary = dictionary
+            st.session_state.text = text
+    
+    
+            with st.expander('3개의 워드클라우드를 생성'):
+    
+                top_nouns_from_corpora = dict(dictionary.most_common())
+    
+                left_column, middle_column, right_column = st.columns(3)
+    
+                with left_column:
+                    wordcloud = WordCloud (max_words= 200,background_color = "white", random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
+                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+                    fig = plt.figure()
+                    plt.imshow(wc, interpolation="bilinear")     
+                    plt.axis('off')    ## 가로, 세로축을 별도로 표시하지 않음.
+                    left_column.pyplot(fig)
+    
+    
+                with middle_column:
+                    wordcloud = WordCloud (max_words= 300,background_color = "black", random_state = 21,font_path = "./font/NanumGothic.ttf")
+                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+                    fig = plt.figure()
+                    plt.imshow(wc, interpolation="bilinear")     
+                    plt.axis('off')    ## 가로, 세로축을 별도로 표시하지 않음.
+                    middle_column.pyplot(fig)
+    
+                with right_column:
+                    wordcloud = WordCloud (max_words= 300,background_color = "white", random_state = 22,font_path = "./font/NanumPen.ttf")
+                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+                    fig = plt.figure()
+                    plt.imshow(wc, interpolation="bilinear")     
+                    plt.axis('off')    ## 가로, 세로축을 별도로 표시하지 않음.
+                    right_column.pyplot(fig)
+    
+    
+    
+            COLORS = [color for color in mcolors.XKCD_COLORS.values()]
+    
+            def show_coherence(corpus, dictionary, start=4, end=11):
+                iter_num = []
+                per_value = []
+                coh_value = []
+    
+                for i in range(start, end + 1):
+    
+                    model = LdaModel(corpus=corpus, id2word=dictionary,
+                             chunksize=1000, num_topics=i,
+                             random_state=7)
+                    iter_num.append(i)
+                    pv = model.log_perplexity(corpus)
+                    per_value.append(pv)
+    
+                    cm = CoherenceModel(model=model, corpus=corpus, 
+                                        coherence='u_mass')
+                    cv = cm.get_coherence()
+                    coh_value.append(cv)
+                    print(f'num_topics: {i}, perplexity: {pv:0.3f}, coherence: {cv:0.3f}')
+    
+                left_column, right_column = st.columns(2)
+    
+                with left_column:
+    
+                    fig1=plt.figure()
+    
+                    plt.plot(iter_num, per_value, 'g-')
+                    plt.xlabel("num_topics")
+                    plt.ylabel("perplexity")
+                    st.pyplot(fig1)
+    
+    
+                with right_column:
+    
+                    fig2=plt.figure()
+                    plt.plot(iter_num, coh_value, 'r--')
+                    plt.xlabel("num_topics")
+                    plt.ylabel("coherence")
+                    st.pyplot(fig2)
+    
+            with st.spinner('최적의 토픽 수를 찾는 중....'):
+                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
+                id2word = st.session_state.dictionary
+                show_coherence(corpus, id2word)
+    
+        NUM = st.number_input('토픽 수를 선택하세요', min_value=4, max_value=11, value=7, step=1)
+        st.session_state.num =NUM
+    
+        start = st.checkbox('토픽모델링 시작!', value=False)
+    
+        if start:
+            st.write(NUM, '개의 토픽을 찾습니다.' )
+    
+            with st.spinner('LDA 모델 훈련 중 ...'):
+    
+                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
+                model = gensim.models.LdaModel(corpus, id2word=st.session_state.dictionary, num_topics=st.session_state.num)
+    
+                topics = model.show_topics(formatted=False, num_words=50,
+                                                         num_topics=st.session_state.num, log=False)
+    
+            with st.expander('Topic Word-Weighted Summaries'):
+                topic_summaries = {}
+                for topic in topics:
+                    topic_index = topic[0]
+                    topic_word_weights = topic[1]
+                    topic_summaries[topic_index] = ' + '.join(
+                        f'{weight:.3f} * {word}' for word, weight in topic_word_weights[:10])
+                for topic_index, topic_summary in topic_summaries.items():
+                    st.markdown(f'**Topic {topic_index}**: _{topic_summary}_')
+    
+            COLORS = [color for color in mcolors.XKCD_COLORS.values()]
+            colors = random.sample(COLORS, k=st.session_state.num)
+            with st.expander('Top N Topic Keywords Wordclouds'):
+                cols = st.columns(3)
+                for index, topic in enumerate(topics):
+                    wc = WordCloud(font_path=font_path, width=700, height=600,
+                                   background_color='white',prefer_horizontal=1.0,
+                                   color_func=lambda *args, **kwargs: colors[index])
+                    with cols[index % 3]:
+                        wc.generate_from_frequencies(dict(topic[1]))
+                        st.image(wc.to_image(), caption=f'Topic #{index}', use_column_width=True)
+    
+    
+            if hasattr(model, 'inference'):  # gensim Nmf has no 'inference' attribute so pyLDAvis fails
+                with st.spinner('Creating pyLDAvis Visualization ...'):
+                    py_lda_vis_data = pyLDAvis.gensim_models.prepare(model, corpus, st.session_state.dictionary)
+                    py_lda_vis_html = pyLDAvis.prepared_data_to_html(py_lda_vis_data)
+                with st.expander('pyLDAvis', expanded=True):
+                    components.html(py_lda_vis_html, width=1300, height=800)   
+        
+    
+        st.markdown(hide_st_style, unsafe_allow_html=True)
 
-    if st.button('Download Dataframe as CSV'):
-        tmp_download_link = download_link(df1, f'{keyword1}.csv', 'Click here to download your data!')
-        st.markdown(tmp_download_link, unsafe_allow_html=True)
+if choose == "Bertopic":
+    st.header('Bertopic (LLM)')
+    uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
+    if uploaded_file is not None:
+        bytes_data = uploaded_file.getvalue()
+        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+        string_data = stringio.read()
+        df = pd.read_csv(uploaded_file)
+        st.write('처음 5개 데이터 확인')
+        st.dataframe(df.head())
+           
+        df_with_abs = df[df.abstracts != 'No_Abstracts']
+        df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
+    
+        text = df_with_abs.to_list()
+        st.write('초록이 있는 논문 수', len(text))
+    
+        # 토크나이저에 명사만 추가한다
+        extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
+        stopwords = Stopwords()
+        
+        class CustomTokenizer:
+            def __init__(self, kiwi):
+                self.kiwi = kiwi
+            def __call__(self, text):
+                result = list()
+                for word in self.kiwi.tokenize(text,  stopwords=stopwords):
+                    # 명사이고, 길이가 2이상인 단어이고, 불용어 리스트에 없으면 추가하기
+                    if word[1] in extract_pos_list and len(word[0]) > 1 :
+                         result.append(word[0])
+                return result
+                
+         
+        custom_tokenizer = CustomTokenizer(Kiwi())
+        vectorizer = CountVectorizer(tokenizer=custom_tokenizer, max_features=300)
+
+        with st.expander('xlm-r-100langs-bert 모델'):
+            
+            st.write('시작...')
+    
+            model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
+            vectorizer_model=vectorizer,
+            nr_topics=10, # 문서를 대표하는 토픽의 갯수
+            top_n_words=10,
+            calculate_probabilities=True)
+            
+            # tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
+            # model = AutoModel.from_pretrained("beomi/kcbert-base")
+            
+            # model1 = BERTopic(embedding_model=model, language="korean", 
+            #                   # top_n_words=10, nr_topics= Nr_topics, 
+            #                   calculate_probabilities=False, verbose=False)
+            # model1.fit(text)
+            topics, probs = model1.fit_transform(text)
+        
+            st.dataframe(model1.get_topic_info())
+            st.header("Visualizations")
+
+
+            st.plotly_chart(model.visualize_topics())
+            st.plotly_chart(model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+            st.plotly_chart(model.visualize_heatmap())
+            st.plotly_chart(model.visualize_hierarchy())
+            st.plotly_chart(model.visualize_term_rank())
+    
+            # with st.expander('beomi/kcbert-base 모델'):
+                
+            #     st.write('시작...')
+                
+            #     tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
+            #     model = AutoModel.from_pretrained("beomi/kcbert-base")
+                
+            #     model1 = BERTopic(embedding_model=model, language="korean", 
+            #                       # top_n_words=10, nr_topics= Nr_topics, 
+            #                       calculate_probabilities=False, verbose=False)
+            #     # model1.fit(text)
+            #     topics, probs = model1.fit_transform(text)
+            
+            #     st.dataframe(model1.get_topic_info())
+            #     st.plotly_chart(model1.visualize_barchart(top_n_topics=7))    
        
+            #     for i in range(Nr_topics):
+            #       st.write(i,'번째 토픽 :', model1.get_topic(i))
     
+            # with st.expander('all-mpnet-base-v2 모델'):
+        
+           
+            #     sentence_model = SentenceTransformer("all-mpnet-base-v2")
+            #     model2 = BERTopic(embedding_model=sentence_model, language="multiligual", nr_topics= Nr_topics, calculate_probabilities=True, verbose=False)
+            #     topics, probs = model2.fit_transform(text)
+        
+            #     st.table(model2.get_topic_info().head(7))
+            #     fig3, ax = model2.visualize_barchart()
+            #     st.pyplot(fig3)
+        
+            #     fig4, ax = model2.visualize_barchart(top_n_topics=Nr_topics)
+            #     st.pyplot(fig4)
+        
+            #     for i in range(N_topics):
+            #       st.write(i,'번째 토픽 :', model.get_topic(i))
+
+
+
 # ---- HIDE STREAMLIT STYLE ----
 hide_st_style = """
             <style>
