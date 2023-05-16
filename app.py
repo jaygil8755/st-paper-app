@@ -333,17 +333,12 @@ if choose == "LDA TM":
     
         st.markdown('한글 제목과 초록만 추출하여 저장하기')
             
-        #df_with_abs = df[df.abstracts != 'No_Abstracts']        
-        df_text = df.loc[:, ['title', 'abstracts']]
+        df_text = df.get('title') + ' '+ df.get('abstracts')
         df_kor_text = df_text.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
-        
+    
         text = df_kor_text.to_list()
-        
-        st.write('초록이 있는 논문 수', len(text))  
         st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
-        
-#         text= df.title.to_list()
-   
+  
         if st.button('워드 클라우드'):
     
             with st.spinner('초록에서 명사를 추출하고있습니다.....'): 
