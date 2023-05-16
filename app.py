@@ -356,12 +356,12 @@ if choose == "LDA TM":
                     tokenized_doc.append(nouns_)
         
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
-            st.write('[확인] 두번째 논문에 등장하는 단어들은', tokenized_doc[1])
-        
+       
     
             dictionary = corpora.Dictionary(tokenized_doc)
             dictionary.filter_extremes(no_below=5, no_above=0.5)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
+            st.write('[확인] 최종 단어 사전 보기', dictionary)
     
             st.session_state.tokenized_doc = tokenized_doc
             st.session_state.dictionary = dictionary
@@ -379,7 +379,7 @@ if choose == "LDA TM":
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
                     fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
-                    plt.axis('off')    ## 가로, 세로축을 별도로 표시하지 않음.
+                    plt.axis('off')    
                     left_column.pyplot(fig)
     
     
@@ -388,7 +388,7 @@ if choose == "LDA TM":
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
                     fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
-                    plt.axis('off')    ## 가로, 세로축을 별도로 표시하지 않음.
+                    plt.axis('off')     
                     middle_column.pyplot(fig)
     
                 with right_column:
@@ -396,7 +396,7 @@ if choose == "LDA TM":
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
                     fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
-                    plt.axis('off')    ## 가로, 세로축을 별도로 표시하지 않음.
+                    plt.axis('off')     
                     right_column.pyplot(fig)
     
     
