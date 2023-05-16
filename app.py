@@ -81,7 +81,7 @@ if choose == "Crawl":
     저작권에 대한 책임도 이용자 본인에게 있습니다.**
     """)
     keyword=st.text_input('검색할 논문의 키워드를 입력하세요(예:로봇, 인공지능+교육): ', key='keyword') 
-    st.session_state.keyword = keyword
+
    
     if keyword:
         
