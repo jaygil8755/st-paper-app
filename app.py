@@ -255,7 +255,7 @@ if choose == "Analyze":
         st.write('마지막 5개 데이터')
         st.dataframe(df.tail())
         st.write('데이터의 기본 정보')
-        st.write(data.describe())
+        st.write(df.describe())
         
     st.markdown('**저자**에서 특정 단어를 포함하고 있는 논문만 검색할 수 있습니다. ')
     keyword_writer =st.text_input('저자에 포함할 단어를 입력해주세요: ')
