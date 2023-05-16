@@ -330,7 +330,7 @@ if choose == "LDA TM":
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
     
-        st.markdown('### 초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
+        st.markdown('#### 초록이 없는 행 제거 후 리스트로 변환하여 text에 저장')
             
         df_with_abs = df[df.abstracts != 'No_Abstracts']
         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
