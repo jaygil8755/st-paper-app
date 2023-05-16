@@ -534,22 +534,21 @@ if choose == "Bertopic":
         vectorizer = CountVectorizer(tokenizer=custom_tokenizer, max_features=300)
 
         with st.expander('xlm-r-100langs-bert 모델'):
-            with st.spinner('LDA 모델 훈련 중 ...'):
-            
-                model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
-                vectorizer_model=vectorizer,
-                nr_topics=10, # 문서를 대표하는 토픽의 갯수
-                top_n_words=10,
-                calculate_probabilities=True)
+          with st.spinner('LDA 모델 훈련 중 ...'):
+            model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
+            vectorizer_model=vectorizer,
+            nr_topics=10, # 문서를 대표하는 토픽의 갯수
+            top_n_words=10,
+            calculate_probabilities=True)
 
-                # tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
-                # model = AutoModel.from_pretrained("beomi/kcbert-base")
+            # tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
+            # model = AutoModel.from_pretrained("beomi/kcbert-base")
 
-                # model1 = BERTopic(embedding_model=model, language="korean", 
-                #                   # top_n_words=10, nr_topics= Nr_topics, 
-                #                   calculate_probabilities=False, verbose=False)
-                # model1.fit(text)
-                topics, probs = model1.fit_transform(text)
+            # model1 = BERTopic(embedding_model=model, language="korean", 
+            #                   # top_n_words=10, nr_topics= Nr_topics, 
+            #                   calculate_probabilities=False, verbose=False)
+            # model1.fit(text)
+            topics, probs = model1.fit_transform(text)
         
             st.dataframe(model1.get_topic_info())
             st.header("Visualizations")
