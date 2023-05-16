@@ -23,6 +23,7 @@ from collections import Counter
 from wordcloud import WordCloud
 from sklearn.feature_extraction.text import CountVectorizer
 
+import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
 import matplotlib
 matplotlib.rcParams['axes.unicode_minus'] = False
@@ -356,12 +357,12 @@ if choose == "LDA TM":
                     tokenized_doc.append(nouns_)
         
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+            st.write('[확인] 모든 단어의 수는' ㅣ)
        
     
             dictionary = corpora.Dictionary(tokenized_doc)
-            dictionary.filter_extremes(no_below=5, no_above=0.5)
+            #dictionary.filter_extremes(no_below=5, no_above=0.5)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
-            st.write('[확인] 최종 단어 사전 보기', dictionary)
     
             st.session_state.tokenized_doc = tokenized_doc
             st.session_state.dictionary = dictionary
@@ -377,27 +378,27 @@ if choose == "LDA TM":
                 with left_column:
                     wordcloud = WordCloud (max_words= 200,background_color = "white", random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig11 = plt.figure()
+                    fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
                     plt.axis('off')    
-                    left_column.pyplot(fig11)
+                    left_column.pyplot(fig)
     
     
                 with middle_column:
                     wordcloud = WordCloud (max_words= 300,background_color = "black", random_state = 21,font_path = "./font/NanumGothic.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig12 = plt.figure()
+                    fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
                     plt.axis('off')     
-                    middle_column.pyplot(fig12)
+                    middle_column.pyplot(fig)
     
                 with right_column:
                     wordcloud = WordCloud (max_words= 300,background_color = "white", random_state = 22,font_path = "./font/NanumPen.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig13 = plt.figure()
+                    fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
                     plt.axis('off')     
-                    right_column.pyplot(fig13)
+                    right_column.pyplot(fig)
     
     
     
