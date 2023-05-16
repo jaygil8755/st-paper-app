@@ -2,7 +2,7 @@ from streamlit_option_menu import option_menu
 import streamlit.components.v1 as components
 import streamlit as st
 
-import pandas as pd
+import pandas as pd  
 import requests
 from bs4 import BeautifulSoup as bs
 import base64
@@ -339,7 +339,7 @@ if choose == "LDA TM":
         text = df_kor_text.to_list()
         st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
   
-        if st.button('워드 클라우드'):
+        if st.button('텍스트 빈도 분석 : 워드 클라우드'):
     
             with st.spinner('텍스트에서 명사를 추출하고있습니다.....'): 
     
@@ -372,7 +372,8 @@ if choose == "LDA TM":
                 left_column, middle_column, right_column = st.columns(3)
     
                 with left_column:
-                    wordcloud = WordCloud (max_words= 200,background_color = "white", random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
+                    wordcloud = WordCloud (width=700, height=600,
+                                   background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
                     fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
@@ -381,7 +382,8 @@ if choose == "LDA TM":
     
     
                 with middle_column:
-                    wordcloud = WordCloud (max_words= 300,background_color = "black", random_state = 21,font_path = "./font/NanumGothic.ttf")
+                    wordcloud = WordCloud (width=700, height=600,
+                                   background_color='white', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
                     fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
@@ -389,7 +391,8 @@ if choose == "LDA TM":
                     middle_column.pyplot(fig)
     
                 with right_column:
-                    wordcloud = WordCloud (max_words= 300,background_color = "white", random_state = 22,font_path = "./font/NanumPen.ttf")
+                    wordcloud = WordCloud (width=700, height=600,
+                                   background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
                     fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
