@@ -340,7 +340,7 @@ if choose == "LDA TM":
 #         st.write('초록이 있는 논문 수', len(text))  
 #         st.write('[확인] 처음 3개 text 시예시', text[:3])
         
-        text= df.text.to_list()
+        text= df.title.to_list()
    
         if st.button('워드 클라우드'):
     
