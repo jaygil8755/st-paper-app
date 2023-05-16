@@ -339,7 +339,7 @@ if choose == "LDA TM":
         text = df_kor_text.to_list()
         st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
   
-        if st.button('텍스트 빈도 분석 : 워드 클라우드'):
+        if st.checkbox('텍스트 빈도 분석 : 워드 클라우드', value=False):
     
             with st.spinner('텍스트에서 명사를 추출하고있습니다.....'): 
     
@@ -383,7 +383,7 @@ if choose == "LDA TM":
     
                 with middle_column:
                     wordcloud = WordCloud (width=700, height=600,
-                                   background_color='white', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
+                                   background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
                     wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
                     fig = plt.figure()
                     plt.imshow(wc, interpolation="bilinear")     
