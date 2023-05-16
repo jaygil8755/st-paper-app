@@ -81,6 +81,7 @@ if choose == "Crawl":
     저작권에 대한 책임도 이용자 본인에게 있습니다.**
     """)
     keyword=st.text_input('검색할 논문의 키워드를 입력하세요(예:로봇, 인공지능+교육): ', key='keyword') 
+    st.session_state.keyword = keyword
    
     if keyword:
         
@@ -210,9 +211,9 @@ if choose == "Crawl":
     if st.checkbox ('키워드 미포함 또는 중복 데이터 삭제'):
     
         st.write('제목과 초록에 키워드가 없는 논문은 삭제합니다.')
-    #    keyword='토픽 ?모델링'
+#         keyword='토픽 ?모델링'
         # 정규표현식으로 띄어쓰기가 0개 이상인 단어 찾기
-        keyword = keyword.replace(" ", " ?")
+        keyword = st.session_state.keyword.replace(" ", " ?")
         
     #     df=df[(df['title'].str.contains(keyword))|(df['abstracts'].str.contains(keyword))] 
         st.session_state['df']=st.session_state['df'][(st.session_state['df']['title'].str.contains(keyword))|(st.session_state['df']['abstracts'].str.contains(keyword))]
@@ -505,6 +506,7 @@ if choose == "Bertopic":
         df = pd.read_csv(uploaded_file)
         st.write('처음 5개 데이터 확인')
         st.dataframe(df.head())
+        st.write('키워드는', st.sesseion_state.keyword)
            
 #         df_with_abs = df[df.abstracts != 'No_Abstracts']
 #         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
