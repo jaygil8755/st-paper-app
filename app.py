@@ -424,14 +424,12 @@ if choose == "LDA TM":
                 left_column, right_column = st.columns(2)
     
                 with left_column:
-    
-                    fig1=plt.figure()
-    
+   
+                    fig1=plt.figure()  
                     plt.plot(iter_num, per_value, 'g-')
                     plt.xlabel("num_topics")
                     plt.ylabel("perplexity")
                     st.pyplot(fig1)
-    
     
                 with right_column:
     
@@ -483,8 +481,7 @@ if choose == "LDA TM":
                     with cols[index % 3]:
                         wc.generate_from_frequencies(dict(topic[1]))
                         st.image(wc.to_image(), caption=f'Topic #{index}', use_column_width=True)
-    
-    
+ 
             if hasattr(model, 'inference'):  # gensim Nmf has no 'inference' attribute so pyLDAvis fails
                 with st.spinner('Creating pyLDAvis Visualization ...'):
                     py_lda_vis_data = pyLDAvis.gensim_models.prepare(model, corpus, st.session_state.dictionary)
@@ -492,9 +489,6 @@ if choose == "LDA TM":
                 with st.expander('pyLDAvis', expanded=True):
                     components.html(py_lda_vis_html, width=1300, height=800)   
         
-    
-        st.markdown(hide_st_style, unsafe_allow_html=True)
-
 if choose == "Bertopic":
     st.header('Bertopic (LLM)')
     uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
