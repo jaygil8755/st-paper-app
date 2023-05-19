@@ -292,38 +292,36 @@ if choose == "Analyze":
     vis_checked=st.checkbox('데이터 시각화')
     
     if vis_checked :
-        
-        with st.expander('journal bar chart - 상위 빈도 20개'):
       
-            fig1_1 = px.bar(df['journal'].value_counts().head(20), orientation='h', labels={'index': '학술지/학위', 'value': '논문 수'})
-            fig1_1.update_layout(showlegend=True, 
-                                 legend_title='학술지/학위별 논문수')
+      tab1, tab2, tab3 = st.tabs(["journal bar chart - 상위 빈도 20개", "publisher pie chart - 상위 빈도 20개", "year histogram"])
 
-            st.plotly_chart(fig1_1)
-        
-        with st.expander('publisher pie chart - 상위 빈도 20개'):
+      with tab1:
+          fig1_1 = px.bar(df['journal'].value_counts().head(20), orientation='h', labels={'index': '학술지/학위', 'value': '논문 수'})
+          fig1_1.update_layout(showlegend=True, 
+                               legend_title='학술지/학위별 논문수')
 
-            freq = df['publisher'].value_counts().head(20)
-            fig2_2 = px.pie(values=freq, 
-                      names=freq.index, 
-                      title='학회/학교별 논문 수')
-    
-            fig2_2.update_traces(textposition='inside', 
-                           textinfo='percent+label', 
-                           marker=dict(colors=px.colors.sequential.YlGnBu))
-    
-            st.plotly_chart(fig2_2)
-        
-        with st.expander('year histogram'):
+          st.plotly_chart(fig1_1)
 
-            fig3_3 = px.histogram(df, 
-                             x='year', 
-                             nbins=25, 
-                             color_discrete_sequence=['pink'], 
-                             title='연도별 논문 수',
-                             labels={'year': '발행 연도', 'count': '발행 논문수'})
-    
-            st.plotly_chart(fig3_3)
+      with tab2:
+          freq = df['publisher'].value_counts().head(20)
+          fig2_2 = px.pie(values=freq, 
+                    names=freq.index, 
+                    title='학회/학교별 논문 수')
+
+          fig2_2.update_traces(textposition='inside', 
+                         textinfo='percent+label', 
+                         marker=dict(colors=px.colors.sequential.YlGnBu))
+          st.plotly_chart(fig2_2)
+
+      with tab3:
+          fig3_3 = px.histogram(df, 
+                           x='year', 
+                           nbins=25, 
+                           color_discrete_sequence=['pink'], 
+                           title='연도별 논문 수',
+                           labels={'year': '발행 연도', 'count': '발행 논문수'})
+
+          st.plotly_chart(fig3_3)
 
 if choose == "LDA TM":
   
