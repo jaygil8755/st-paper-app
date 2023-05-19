@@ -80,10 +80,12 @@ if choose == "Crawl":
     ** 본 서비스는 교육/연구용으로 제공되는 것으로 결과에 대해 어떠한 책임도 지지 않습니다. 
     저작권에 대한 책임도 이용자 본인에게 있습니다.**
     """)
-    keyword=st.text_input('검색할 논문의 키워드를 입력하세요(예:로봇, 인공지능+교육): ', key='keyword') 
+    with st.form("form"):
+      keyword=st.text_input('검색할 논문의 키워드를 입력하세요(예:토픽 모델링): ', key='keyword') 
+      submit = st.form_submit_button("검색")
 
    
-    if keyword:
+    if submit:
         
         st.write(f'{keyword}에 대한 논문을 수집합니다.')    
     
