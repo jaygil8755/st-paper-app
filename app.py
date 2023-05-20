@@ -116,7 +116,7 @@ if choose == "Crawl":
         
         st.info(f'총 {max_num1}개의 학술논문과 {max_num2}개의 학위논문이 검색되었습니다.')
     
-    st.session_state.max_num11 = max_num1
+    st.session_state.max_num1 = max_num1
     st.session_state.max_num2 = max_num2
     
     if st.button('크롤링 시작') :
