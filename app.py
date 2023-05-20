@@ -374,9 +374,9 @@ if choose == "LDA TM":
                     tokenized_doc.append(nouns_)
                 Bigram_Model = gensim.models.Phrases(tokenized_doc, min_count=2, delimiter=" ")
                 bigram_tokenized_docs = []
-                for doc in tokenized_docs:
+                for doc in tokenized_doc:
                     a = Bigram_Model[doc]
-                    bigram_tokenized_docs.append(a)
+                    bigram_tokenized_doc.append(a)
                     
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', bigram_tokenized_doc[0])
 
