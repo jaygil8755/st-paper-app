@@ -377,7 +377,7 @@ if choose == "LDA TM":
         st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
                        
         tokenizer_ = st.selectbox('어떤 형태소 분석기를 선택할까요?', ('Okt', 'Kkma', 'Kiwi'))
-        if tokenizer == 'Kiwi':
+        if tokenizer_ == 'Kiwi':
             with st.spinner('Kiwi를 이용해 명사를 추출하고있습니다.....'):                       
               kiwi=Kiwi() 
               extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
