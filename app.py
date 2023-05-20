@@ -371,35 +371,20 @@ if choose == "LDA TM":
                       if word[1] in extract_pos_list and len(word[0]) > 1 :
                           nouns_.append(word[0])     
                   tokenized_doc.append(nouns_)
-        
-            st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
-            st.write('[확인] 전체 명사 수는', len(tokenized_doc)             
-  
-#         if st.checkbox('텍스트 빈도 분석 : 워드 클라우드', value=False):
-    
-#             with st.spinner('텍스트에서 명사를 추출하고있습니다.....'): 
-    
-#                 kiwi=Kiwi() 
-#                 extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
-#                 stopwords = Stopwords()
-          
-#                 tokenized_doc=[]
-#                 for words in text:
-#                     nouns_ = [] 
-#                     for word in kiwi.tokenize(words,  stopwords=stopwords):
-#                         if word[1] in extract_pos_list and len(word[0]) > 1 :
-#                             nouns_.append(word[0])     
-#                     tokenized_doc.append(nouns_)
-        
-#             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
-
-            dictionary = corpora.Dictionary(tokenized_doc)
-            dictionary.filter_extremes(no_below=5, no_above=0.5)
+				
+                  
+              dictionary = corpora.Dictionary(tokenized_doc)
+              dictionary.filter_extremes(no_below=5, no_above=0.5)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
-    
+
             st.session_state.tokenized_doc = tokenized_doc
             st.session_state.dictionary = dictionary
             st.session_state.text = text
+        
+            st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+            st.write('[확인] 전체 명사 수는', len(tokenized_doc)             
+            
+
     
             with st.expander('3개의 워드클라우드를 생성'):
     
