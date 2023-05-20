@@ -167,7 +167,7 @@ if choose == "Crawl":
               url2 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=re_a_kor&colName=bib_t&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={max_num2}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
               result2 = requests.get(url2, headers=HEADERS)
               soup2 = bs(result2.text, 'html.parser')
-                            contents2 = soup2.find_all('div', class_='cont ml60')
+              contents2 = soup2.find_all('div', class_='cont ml60')
     
               title = []
               writer =[]
@@ -207,7 +207,7 @@ if choose == "Crawl":
         st.write('학술 논문과 학위 논문을 하나로 만듭니다.')
         df = pd.concat([df1,df2], ignore_index=True)
     
-        st.dataframe(df.head())
+        st.write(f'전체 논문의 수는: {df.len()})
         if 'df' not in st.session_state:
             st.session_state['df'] = df
         st.session_state['df'] = df
