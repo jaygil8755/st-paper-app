@@ -388,7 +388,8 @@ if choose == "LDA TM":
             st.session_state.bigram_tokenized_doc = bigram_tokenized_doc
             st.session_state.dictionary = dictionary
             st.session_state.text = text
-            st.write('가장 빈도수가 높은 단어 Top 10:', st.session_state.dictionary.most_common(10))
+            st.write('가장 빈도수가 높은 단어 Top 10:')
+            st.dataframe(pd.DataFrame(st.session_state.dictionary.most_common(10), columns=['Word', 'Count'])
     
             with st.expander('3개의 워드클라우드를 생성'):
     
