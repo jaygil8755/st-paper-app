@@ -216,7 +216,7 @@ if choose == "Crawl":
         st.write('학술 논문과 학위 논문을 하나로 만듭니다.')
         df = pd.concat([df1,df2], ignore_index=True)
     
-        st.write(f'전체 논문의 수는: {df.len()}')
+        st.dataframe(df)
         if 'df' not in st.session_state:
             st.session_state['df'] = df
         st.session_state['df'] = df
