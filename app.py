@@ -401,36 +401,36 @@ if choose == "LDA TM":
             st.session_state.dictionary = dictionary
             st.session_state.text = text
    
-    top_nouns_from_corpora = dict(st.session_state.dictionary.most_common())
-    left_column, middle_column, right_column = st.columns(3)
+        top_nouns_from_corpora = dict(st.session_state.dictionary.most_common())
+        left_column, middle_column, right_column = st.columns(3)
 
-    with left_column:
-        wordcloud = WordCloud (width=700, height=600,
-        background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
-        wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-        fig = plt.figure()
-        plt.imshow(wc, interpolation="bilinear")     
-        plt.axis('off')    
-        left_column.pyplot(fig)
+        with left_column:
+            wordcloud = WordCloud (width=700, height=600,
+            background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
+            wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+            fig = plt.figure()
+            plt.imshow(wc, interpolation="bilinear")     
+            plt.axis('off')    
+            left_column.pyplot(fig)
 
 
-    with middle_column:
-        wordcloud = WordCloud (width=700, height=600,
-        background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
-        wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-        fig = plt.figure()
-        plt.imshow(wc, interpolation="bilinear")     
-        plt.axis('off')     
-        middle_column.pyplot(fig)
+        with middle_column:
+            wordcloud = WordCloud (width=700, height=600,
+            background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
+            wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+            fig = plt.figure()
+            plt.imshow(wc, interpolation="bilinear")     
+            plt.axis('off')     
+            middle_column.pyplot(fig)
 
-    with right_column:
-        wordcloud = WordCloud (width=700, height=600,
-        background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
-        wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-        fig = plt.figure()
-        plt.imshow(wc, interpolation="bilinear")     
-        plt.axis('off')     
-        right_column.pyplot(fig)
+        with right_column:
+            wordcloud = WordCloud (width=700, height=600,
+            background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
+            wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+            fig = plt.figure()
+            plt.imshow(wc, interpolation="bilinear")     
+            plt.axis('off')     
+            right_column.pyplot(fig)
 
         if st.checkbox('LDA 토픽모델링'):  
             COLORS = [color for color in mcolors.XKCD_COLORS.values()]
