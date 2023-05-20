@@ -116,6 +116,9 @@ if choose == "Crawl":
         
         st.info(f'총 {max_num1}개의 학술논문과 {max_num2}개의 학위논문이 검색되었습니다.')
     
+    st.session_state.max_num11 = max_num1
+    st.session_state.max_num2 = max_num2
+    
     if st.button('크롤링 시작') :
         
         with st.spinner('논문을 수집하고 있습니다....'):
@@ -124,7 +127,7 @@ if choose == "Crawl":
            with tab1:
               HEADERS={'User-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'}
                           
-              url1 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=bib_t&colName=re_a_kor&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={max_num1}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}\&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
+              url1 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=bib_t&colName=re_a_kor&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={st.session_state.max_num1}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}\&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
               result1 = requests.get(url1, headers=HEADERS)
               soup1 = bs(result1.text, 'html.parser')
               contents1 = soup1.find_all('div', class_='cont ml60')
@@ -167,7 +170,7 @@ if choose == "Crawl":
            with tab2:      
               HEADERS={'User-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'}
                    
-              url2 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=re_a_kor&colName=bib_t&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={max_num2}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
+              url2 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=re_a_kor&colName=bib_t&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={st.session_state.max_num2}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
               result2 = requests.get(url2, headers=HEADERS)
               soup2 = bs(result2.text, 'html.parser')
               contents2 = soup2.find_all('div', class_='cont ml60')
