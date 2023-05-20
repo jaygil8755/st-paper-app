@@ -1,6 +1,6 @@
 from streamlit_option_menu import option_menu
 import streamlit.components.v1 as components
-import streamlit as st
+import streamlit as st  
 
 import pandas as pd  
 import requests
@@ -91,7 +91,7 @@ if choose == "Crawl":
     
         HEADERS={'User-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'}
     
-        url1 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=bib_t&colName=re_a_kor&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale=10&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}\&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
+        url1 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=bib_t&colName=re_a_kor&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale=10&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
         url2 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=re_a_kor&colName=bib_t&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale=10&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
     
         result1 = requests.get(url1, headers=HEADERS)
@@ -290,7 +290,7 @@ if choose == "Analyze":
     keyword_title =st.text_input('제목에 포함할 단어를 입력해주세요: ')
     
     if keyword_title :
-        df_= df[df['title'].str.contains(keyword_title)]
+        df_= df[df['title'].str.contains(keyword_title), case=False]
         st.write(f'총 {len(df_)}편이 검색되었습니다.')
         st.dataframe(df[df['title'].str.contains(keyword_title)])
     
@@ -298,7 +298,7 @@ if choose == "Analyze":
     keyword_abs =st.text_input('초록에 포함할 단어를 입력해주세요: ')
     
     if keyword_abs :
-        df_= df[df['abstracts'].str.contains(keyword_abs)]
+        df_= df[df['abstracts'].str.contains(keyword_abs, case=False)]
         st.write(f'총 {len(df_)}편이 검색되었습니다.')
         st.dataframe(df[df['abstracts'].str.contains(keyword_abs)])
     
