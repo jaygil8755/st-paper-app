@@ -403,39 +403,39 @@ if choose == "LDA TM":
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
             st.write('[확인] 전체 명사 수는', len(tokenized_doc))             
             
-            with st.expander('3개의 워드클라우드를 생성'):
+#             with st.expander('3개의 워드클라우드를 생성'):
 
-		  top_nouns_from_corpora = dict(st.session_state.dictionary.most_common())
+# 		  top_nouns_from_corpora = dict(st.session_state.dictionary.most_common())
 
-		  left_column, middle_column, right_column = st.columns(3)
+# 		  left_column, middle_column, right_column = st.columns(3)
 
-		  with left_column:
-		      wordcloud = WordCloud (width=700, height=600,
-			 background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
-		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-		      fig = plt.figure()
-		      plt.imshow(wc, interpolation="bilinear")     
-		      plt.axis('off')    
-		      left_column.pyplot(fig)
+# 		  with left_column:
+# 		      wordcloud = WordCloud (width=700, height=600,
+# 			 background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
+# 		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+# 		      fig = plt.figure()
+# 		      plt.imshow(wc, interpolation="bilinear")     
+# 		      plt.axis('off')    
+# 		      left_column.pyplot(fig)
 
 
-		  with middle_column:
-		      wordcloud = WordCloud (width=700, height=600,
-			 background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
-		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-		      fig = plt.figure()
-		      plt.imshow(wc, interpolation="bilinear")     
-		      plt.axis('off')     
-		      middle_column.pyplot(fig)
+# 		  with middle_column:
+# 		      wordcloud = WordCloud (width=700, height=600,
+# 			 background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
+# 		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+# 		      fig = plt.figure()
+# 		      plt.imshow(wc, interpolation="bilinear")     
+# 		      plt.axis('off')     
+# 		      middle_column.pyplot(fig)
 
-		  with right_column:
-		      wordcloud = WordCloud (width=700, height=600,
-			 background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
-		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-		      fig = plt.figure()
-		      plt.imshow(wc, interpolation="bilinear")     
-		      plt.axis('off')     
-		      right_column.pyplot(fig)
+# 		  with right_column:
+# 		      wordcloud = WordCloud (width=700, height=600,
+# 			 background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
+# 		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+# 		      fig = plt.figure()
+# 		      plt.imshow(wc, interpolation="bilinear")     
+# 		      plt.axis('off')     
+# 		      right_column.pyplot(fig)
 
 
           
