@@ -380,17 +380,17 @@ if choose == "LDA TM":
                     
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', bigram_tokenized_doc[0])
 
-            dictionary = corpora.Dictionary(bigrma_tokenized_doc)
+            dictionary = corpora.Dictionary(bigram_tokenized_doc)
             dictionary.filter_extremes(no_below=5, no_above=0.5)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
     
-            st.session_state.tokenized_doc = tokenized_doc
+            st.session_state.bigram_tokenized_doc = bigram_tokenized_doc
             st.session_state.dictionary = dictionary
             st.session_state.text = text
     
             with st.expander('3개의 워드클라우드를 생성'):
     
-                top_nouns_from_corpora = dict(dictionary.most_common(100))
+                top_nouns_from_corpora = dict(st.session_state.dictionary.most_common(100))
     
                 left_column, middle_column, right_column = st.columns(3)
     
