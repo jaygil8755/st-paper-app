@@ -356,24 +356,42 @@ if choose == "LDA TM":
     
         text = df_kor_text.to_list()
         st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
-  
-        if st.checkbox('텍스트 빈도 분석 : 워드 클라우드', value=False):
-    
-            with st.spinner('텍스트에서 명사를 추출하고있습니다.....'): 
-    
-                kiwi=Kiwi() 
-                extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
-                stopwords = Stopwords()
-          
-                tokenized_doc=[]
-                for words in text:
-                    nouns_ = [] 
-                    for word in kiwi.tokenize(words,  stopwords=stopwords):
-                        if word[1] in extract_pos_list and len(word[0]) > 1 :
-                            nouns_.append(word[0])     
-                    tokenized_doc.append(nouns_)
+                       
+        tokenizer_ = st.selectbox('어떤 형태소 분석기를 선택할까요?, ('Okt', 'Kkma', 'Kiwi'))
+        if tokenizer == 'Kiwi':
+            with st.spinner('Kiwi를 이용해 명사를 추출하고있습니다.....'):                       
+              kiwi=Kiwi() 
+              extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
+              stopwords = Stopwords()
+
+              tokenized_doc=[]
+              for words in text:
+                  nouns_ = [] 
+                  for word in kiwi.tokenize(words,  stopwords=stopwords):
+                      if word[1] in extract_pos_list and len(word[0]) > 1 :
+                          nouns_.append(word[0])     
+                  tokenized_doc.append(nouns_)
         
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+            st.write('[확인] 전체 명사 수는', len(tokenized_doc)             
+  
+#         if st.checkbox('텍스트 빈도 분석 : 워드 클라우드', value=False):
+    
+#             with st.spinner('텍스트에서 명사를 추출하고있습니다.....'): 
+    
+#                 kiwi=Kiwi() 
+#                 extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
+#                 stopwords = Stopwords()
+          
+#                 tokenized_doc=[]
+#                 for words in text:
+#                     nouns_ = [] 
+#                     for word in kiwi.tokenize(words,  stopwords=stopwords):
+#                         if word[1] in extract_pos_list and len(word[0]) > 1 :
+#                             nouns_.append(word[0])     
+#                     tokenized_doc.append(nouns_)
+        
+#             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
 
             dictionary = corpora.Dictionary(tokenized_doc)
             dictionary.filter_extremes(no_below=5, no_above=0.5)
