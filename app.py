@@ -292,7 +292,7 @@ if choose == "Analyze":
     if keyword_title :
         df_= df[df['title'].str.contains(keyword_title, case=False)]
         st.write(f'총 {len(df_)}편이 검색되었습니다.')
-        st.dataframe(df[df['title'].str.contains(keyword_title)])
+        st.dataframe(df[df['title'].str.contains(keyword_title, case=False)])
     
     st.markdown('**초록**에서 특정 단어를 포함하는 논문만 검색할 수 있습니다.')
     keyword_abs =st.text_input('초록에 포함할 단어를 입력해주세요: ')
@@ -300,7 +300,7 @@ if choose == "Analyze":
     if keyword_abs :
         df_= df[df['abstracts'].str.contains(keyword_abs, case=False)]
         st.write(f'총 {len(df_)}편이 검색되었습니다.')
-        st.dataframe(df[df['abstracts'].str.contains(keyword_abs)])
+        st.dataframe(df[df['abstracts'].str.contains(keyword_abs, case=False)])
     
     vis_checked=st.checkbox('데이터 시각화')
     
