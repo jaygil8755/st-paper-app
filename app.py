@@ -401,7 +401,7 @@ if choose == "LDA TM":
             st.session_state.text = text
         
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
-            st.write('[확인] 전체 명사 수는', len(tokenized_doc)             
+            st.write('[확인] 전체 명사 수는', len(tokenized_doc))             
             
             with st.expander('3개의 워드클라우드를 생성'):
 
