@@ -372,10 +372,15 @@ if choose == "LDA TM":
                         if word[1] in extract_pos_list and len(word[0]) > 1 :
                             nouns_.append(word[0])     
                     tokenized_doc.append(nouns_)
-        
-            st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+                Bigram_Model = gensim.models.Phrases(tokenized_doc, min_count=2, delimiter=" ")
+                bigram_tokenized_docs = []
+                for doc in tokenized_docs:
+                    a = Bigram_Model[doc]
+                    bigram_tokenized_docs.append(a)
+                    
+            st.write('[확인] 첫번째 논문에 등장하는 단어들은', bigram_tokenized_doc[0])
 
-            dictionary = corpora.Dictionary(tokenized_doc)
+            dictionary = corpora.Dictionary(bigrma_tokenized_doc)
             dictionary.filter_extremes(no_below=5, no_above=0.5)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
     
@@ -385,7 +390,7 @@ if choose == "LDA TM":
     
             with st.expander('3개의 워드클라우드를 생성'):
     
-                top_nouns_from_corpora = dict(dictionary.most_common())
+                top_nouns_from_corpora = dict(dictionary.most_common(100))
     
                 left_column, middle_column, right_column = st.columns(3)
     
@@ -416,9 +421,8 @@ if choose == "LDA TM":
                     plt.imshow(wc, interpolation="bilinear")     
                     plt.axis('off')     
                     right_column.pyplot(fig)
-    
-    
-    
+  
+   
             COLORS = [color for color in mcolors.XKCD_COLORS.values()]
     
             def show_coherence(corpus, dictionary, start=4, end=11):
