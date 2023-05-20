@@ -519,6 +519,12 @@ if choose == "LDA TM":
         
 if choose == "Bertopic":
     st.header('Bertopic (LLM)')
+    st.markdown('''임베딩 모델 이름을 확인하세요..
+    model1 = "sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens"
+    model2 = "sentence-transformers/paraphrase-MiniLM-L3-v2"
+    model3 = "sentence-transformers/all-mpnet-base-v2"
+    model4 = "jhgan/ko-sroberta-multitask"
+    ''')
     model = st.radio ("어떤 모델을 선택하시겠습니까?", ['model1', 'model2', 'model3', 'model4' ])
     tab1, tab2, tab3, tab4 = st.tabs(['model1', 'model2', 'model3', 'model4'])
 
@@ -534,14 +540,32 @@ if choose == "Bertopic":
 
     with tab2:
         if model == 'model2':
-            st.write('ffff')
+            model1 = BERTopic.load("./model/my_model2")
+            st.header("Visualizations")
+            st.plotly_chart(model2.visualize_topics())
+            st.plotly_chart(model2.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+            st.plotly_chart(model2.visualize_heatmap())
+            st.plotly_chart(model2.visualize_hierarchy())
+            st.plotly_chart(model2.visualize_term_rank())
             
     with tab3:
         if model == 'model3':
-            st.write('ffff')
+            model1 = BERTopic.load("./model/my_model3")
+            st.header("Visualizations")
+            st.plotly_chart(model3.visualize_topics())
+            st.plotly_chart(model3.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+            st.plotly_chart(model3.visualize_heatmap())
+            st.plotly_chart(model3.visualize_hierarchy())
+            st.plotly_chart(model3.visualize_term_rank())
     with tab4:
         if model == 'model4':
-            st.write('ㄹㄴㅇㄹㄴ')
+            model1 = BERTopic.load("./model/my_model2")
+            st.header("Visualizations")
+            st.plotly_chart(model4.visualize_topics())
+            st.plotly_chart(model4.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+            st.plotly_chart(model4.visualize_heatmap())
+            st.plotly_chart(model4.visualize_hierarchy())
+            st.plotly_chart(model4.visualize_term_rank())
 
     
     
