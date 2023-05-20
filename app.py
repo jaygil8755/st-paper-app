@@ -290,7 +290,7 @@ if choose == "Analyze":
     keyword_title =st.text_input('제목에 포함할 단어를 입력해주세요: ')
     
     if keyword_title :
-        df_= df[df['title'].str.contains(keyword_title), case=False]
+        df_= df[df['title'].str.contains(keyword_title, case=False)]
         st.write(f'총 {len(df_)}편이 검색되었습니다.')
         st.dataframe(df[df['title'].str.contains(keyword_title)])
     
