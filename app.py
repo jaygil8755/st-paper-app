@@ -403,112 +403,112 @@ if choose == "LDA TM":
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
             st.write('[확인] 전체 명사 수는', len(tokenized_doc))             
             
-#             with st.expander('3개의 워드클라우드를 생성'):
+            with st.expander('3개의 워드클라우드를 생성'):
 
-# 		  top_nouns_from_corpora = dict(st.session_state.dictionary.most_common())
+                top_nouns_from_corpora = dict(st.session_state.dictionary.most_common())
 
-# 		  left_column, middle_column, right_column = st.columns(3)
+                left_column, middle_column, right_column = st.columns(3)
 
-# 		  with left_column:
-# 		      wordcloud = WordCloud (width=700, height=600,
-# 			 background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
-# 		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-# 		      fig = plt.figure()
-# 		      plt.imshow(wc, interpolation="bilinear")     
-# 		      plt.axis('off')    
-# 		      left_column.pyplot(fig)
+                with left_column:
+                    wordcloud = WordCloud (width=700, height=600,
+                    background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
+                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+                    fig = plt.figure()
+                    plt.imshow(wc, interpolation="bilinear")     
+                    plt.axis('off')    
+                    left_column.pyplot(fig)
 
 
-# 		  with middle_column:
-# 		      wordcloud = WordCloud (width=700, height=600,
-# 			 background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
-# 		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-# 		      fig = plt.figure()
-# 		      plt.imshow(wc, interpolation="bilinear")     
-# 		      plt.axis('off')     
-# 		      middle_column.pyplot(fig)
+                with middle_column:
+                    wordcloud = WordCloud (width=700, height=600,
+                    background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
+                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+                    fig = plt.figure()
+                    plt.imshow(wc, interpolation="bilinear")     
+                    plt.axis('off')     
+                    middle_column.pyplot(fig)
 
-# 		  with right_column:
-# 		      wordcloud = WordCloud (width=700, height=600,
-# 			 background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
-# 		      wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-# 		      fig = plt.figure()
-# 		      plt.imshow(wc, interpolation="bilinear")     
-# 		      plt.axis('off')     
-# 		      right_column.pyplot(fig)
+                with right_column:
+                    wordcloud = WordCloud (width=700, height=600,
+                    background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
+                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+                    fig = plt.figure()
+                    plt.imshow(wc, interpolation="bilinear")     
+                    plt.axis('off')     
+                    right_column.pyplot(fig)
 
 
           
-          COLORS = [color for color in mcolors.XKCD_COLORS.values()]
+        COLORS = [color for color in mcolors.XKCD_COLORS.values()]
 
-          left_column, right_column = st.columns(2)
+        left_column, right_column = st.columns(2)
 
-          with left_column:
+        with left_column:
 
-              fig1=plt.figure()  
-              plt.plot(iter_num, per_value, 'g-')
-              plt.xlabel("num_topics")
-              plt.ylabel("perplexity")
-              st.pyplot(fig1)
+            fig1=plt.figure()  
+            plt.plot(iter_num, per_value, 'g-')
+            plt.xlabel("num_topics")
+            plt.ylabel("perplexity")
+            st.pyplot(fig1)
 
-          with right_column:
+        with right_column:
 
-              fig2=plt.figure()
-              plt.plot(iter_num, coh_value, 'r--')
-              plt.xlabel("num_topics")
-              plt.ylabel("coherence")
-              st.pyplot(fig2)
+            fig2=plt.figure()
+            plt.plot(iter_num, coh_value, 'r--')
+            plt.xlabel("num_topics")
+            plt.ylabel("coherence")
+            st.pyplot(fig2)
 
-            with st.spinner('최적의 토픽 수를 찾는 중....'):
-              corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
-              id2word = st.session_state.dictionary
-              show_coherence(corpus, id2word)
+        with st.spinner('최적의 토픽 수를 찾는 중....'):
+            corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
+            id2word = st.session_state.dictionary
+            show_coherence(corpus, id2word)
 
-              NUM = st.number_input('토픽 수를 선택하세요', min_value=4, max_value=11, value=7, step=1)
-              st.session_state.num =NUM
+            NUM = st.number_input('토픽 수를 선택하세요', min_value=4, max_value=11, value=7, step=1)
+            st.session_state.num =NUM
 
-              start = st.checkbox('토픽모델링 시작!', value=False)
+            start = st.checkbox('토픽모델링 시작!', value=False)
 
-              if start:
-                  st.write(NUM, '개의 토픽을 찾습니다.' )
+            if start:
+                st.write(NUM, '개의 토픽을 찾습니다.' )
 
-                  with st.spinner('LDA 모델 훈련 중 ...'):
+                with st.spinner('LDA 모델 훈련 중 ...'):
 
-                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
-                model = gensim.models.LdaModel(corpus, id2word=st.session_state.dictionary, num_topics=st.session_state.num)
+                    corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
+                    model = gensim.models.LdaModel(corpus, id2word=st.session_state.dictionary, num_topics=st.session_state.num)
 
-                topics = model.show_topics(formatted=False, num_words=50,
-                           num_topics=st.session_state.num, log=False)
+                    topics = model.show_topics(formatted=False, num_words=50,
+                                num_topics=st.session_state.num, log=False)
 
-                  with st.expander('Topic Word-Weighted Summaries'):
-                topic_summaries = {}
-                for topic in topics:
-                    topic_index = topic[0]
-                    topic_word_weights = topic[1]
-                    topic_summaries[topic_index] = ' + '.join(
-                  f'{weight:.3f} * {word}' for word, weight in topic_word_weights[:10])
-                for topic_index, topic_summary in topic_summaries.items():
-                    st.markdown(f'**Topic {topic_index}**: _{topic_summary}_')
+                with st.expander('Topic Word-Weighted Summaries'):
+                    topic_summaries = {}
+                    for topic in topics:
+                        topic_index = topic[0]
+                        topic_word_weights = topic[1]
+                        topic_summaries[topic_index] = ' + '.join(f'{weight:.3f} * {word}' for word, weight in topic_word_weights[:10])
+                    for topic_index, topic_summary in topic_summaries.items():
+                        st.markdown(f'**Topic {topic_index}**: _{topic_summary}_')
 
-                  COLORS = [color for color in mcolors.XKCD_COLORS.values()]
-                  colors = random.sample(COLORS, k=st.session_state.num)
-                  with st.expander('Top N Topic Keywords Wordclouds'):
-                cols = st.columns(3)
-                for index, topic in enumerate(topics):
-                    wc = WordCloud(font_path=font_path, width=700, height=600,
-                       background_color='white',prefer_horizontal=1.0,
-                       color_func=lambda *args, **kwargs: colors[index])
-                    with cols[index % 3]:
-                  wc.generate_from_frequencies(dict(topic[1]))
-                  st.image(wc.to_image(), caption=f'Topic #{index}', use_column_width=True)
+                    COLORS = [color for color in mcolors.XKCD_COLORS.values()]
+                    colors = random.sample(COLORS, k=st.session_state.num)
+                
+                with st.expander('Top N Topic Keywords Wordclouds'):
+                    cols = st.columns(3)
+                    for index, topic in enumerate(topics):
+                        wc = WordCloud(font_path=font_path, width=700, height=600,
+                        background_color='white',prefer_horizontal=1.0,
+                        color_func=lambda *args, **kwargs: colors[index])
+                        with cols[index % 3]:
+                            wc.generate_from_frequencies(dict(topic[1]))
+                            st.image(wc.to_image(), caption=f'Topic #{index}', use_column_width=True)
 
-                  if hasattr(model, 'inference'):  # gensim Nmf has no 'inference' attribute so pyLDAvis fails
+            if hasattr(model, 'inference'):  # gensim Nmf has no 'inference' attribute so pyLDAvis fails
                 with st.spinner('Creating pyLDAvis Visualization ...'):
                     py_lda_vis_data = pyLDAvis.gensim_models.prepare(model, corpus, st.session_state.dictionary)
                     py_lda_vis_html = pyLDAvis.prepared_data_to_html(py_lda_vis_data)
                 with st.expander('pyLDAvis', expanded=True):
                     components.html(py_lda_vis_html, width=1300, height=800)   
-        
+		
 if choose == "Bertopic":
     st.header('Bertopic (LLM)')
     uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
