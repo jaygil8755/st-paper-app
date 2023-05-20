@@ -386,86 +386,86 @@ if choose == "LDA TM":
             
 
     
-            with st.expander('3개의 워드클라우드를 생성'):
-    
-                top_nouns_from_corpora = dict(dictionary.most_common())
-    
-                left_column, middle_column, right_column = st.columns(3)
-    
-                with left_column:
-                    wordcloud = WordCloud (width=700, height=600,
-                                   background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
-                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig = plt.figure()
-                    plt.imshow(wc, interpolation="bilinear")     
-                    plt.axis('off')    
-                    left_column.pyplot(fig)
-    
-    
-                with middle_column:
-                    wordcloud = WordCloud (width=700, height=600,
-                                   background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
-                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig = plt.figure()
-                    plt.imshow(wc, interpolation="bilinear")     
-                    plt.axis('off')     
-                    middle_column.pyplot(fig)
-    
-                with right_column:
-                    wordcloud = WordCloud (width=700, height=600,
-                                   background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
-                    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
-                    fig = plt.figure()
-                    plt.imshow(wc, interpolation="bilinear")     
-                    plt.axis('off')     
-                    right_column.pyplot(fig)
-    
-    
-    
-            COLORS = [color for color in mcolors.XKCD_COLORS.values()]
-    
-            def show_coherence(corpus, dictionary, start=4, end=11):
-                iter_num = []
-                per_value = []
-                coh_value = []
-    
-                for i in range(start, end + 1):
-    
-                    model = LdaModel(corpus=corpus, id2word=dictionary,
-                             chunksize=1000, num_topics=i,
-                             random_state=7)
-                    iter_num.append(i)
-                    pv = model.log_perplexity(corpus)
-                    per_value.append(pv)
-    
-                    cm = CoherenceModel(model=model, corpus=corpus, 
-                                        coherence='u_mass')
-                    cv = cm.get_coherence()
-                    coh_value.append(cv)
-                    print(f'num_topics: {i}, perplexity: {pv:0.3f}, coherence: {cv:0.3f}')
-    
-                left_column, right_column = st.columns(2)
-    
-                with left_column:
-   
-                    fig1=plt.figure()  
-                    plt.plot(iter_num, per_value, 'g-')
-                    plt.xlabel("num_topics")
-                    plt.ylabel("perplexity")
-                    st.pyplot(fig1)
-    
-                with right_column:
-    
-                    fig2=plt.figure()
-                    plt.plot(iter_num, coh_value, 'r--')
-                    plt.xlabel("num_topics")
-                    plt.ylabel("coherence")
-                    st.pyplot(fig2)
-    
-            with st.spinner('최적의 토픽 수를 찾는 중....'):
-                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
-                id2word = st.session_state.dictionary
-                show_coherence(corpus, id2word)
+    with st.expander('3개의 워드클라우드를 생성'):
+
+	top_nouns_from_corpora = dict(dictionary.most_common())
+
+	left_column, middle_column, right_column = st.columns(3)
+
+	with left_column:
+	    wordcloud = WordCloud (width=700, height=600,
+			   background_color='white',prefer_horizontal=1.0, random_state = 20,font_path = "./font/NanumBarunGothic.ttf")
+	    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+	    fig = plt.figure()
+	    plt.imshow(wc, interpolation="bilinear")     
+	    plt.axis('off')    
+	    left_column.pyplot(fig)
+
+
+	with middle_column:
+	    wordcloud = WordCloud (width=700, height=600,
+			   background_color='black', prefer_horizontal=1.0, random_state = 21,font_path = "./font/NanumGothic.ttf")
+	    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+	    fig = plt.figure()
+	    plt.imshow(wc, interpolation="bilinear")     
+	    plt.axis('off')     
+	    middle_column.pyplot(fig)
+
+	with right_column:
+	    wordcloud = WordCloud (width=700, height=600,
+			   background_color='white',prefer_horizontal=1.0, random_state = 22,font_path = "./font/NanumPen.ttf")
+	    wc = wordcloud.generate_from_frequencies(top_nouns_from_corpora)
+	    fig = plt.figure()
+	    plt.imshow(wc, interpolation="bilinear")     
+	    plt.axis('off')     
+	    right_column.pyplot(fig)
+
+
+
+    COLORS = [color for color in mcolors.XKCD_COLORS.values()]
+
+    def show_coherence(corpus, dictionary, start=4, end=11):
+	iter_num = []
+	per_value = []
+	coh_value = []
+
+	for i in range(start, end + 1):
+
+	    model = LdaModel(corpus=corpus, id2word=dictionary,
+		     chunksize=1000, num_topics=i,
+		     random_state=7)
+	    iter_num.append(i)
+	    pv = model.log_perplexity(corpus)
+	    per_value.append(pv)
+
+	    cm = CoherenceModel(model=model, corpus=corpus, 
+				coherence='u_mass')
+	    cv = cm.get_coherence()
+	    coh_value.append(cv)
+	    print(f'num_topics: {i}, perplexity: {pv:0.3f}, coherence: {cv:0.3f}')
+
+	left_column, right_column = st.columns(2)
+
+	with left_column:
+
+	    fig1=plt.figure()  
+	    plt.plot(iter_num, per_value, 'g-')
+	    plt.xlabel("num_topics")
+	    plt.ylabel("perplexity")
+	    st.pyplot(fig1)
+
+	with right_column:
+
+	    fig2=plt.figure()
+	    plt.plot(iter_num, coh_value, 'r--')
+	    plt.xlabel("num_topics")
+	    plt.ylabel("coherence")
+	    st.pyplot(fig2)
+
+    with st.spinner('최적의 토픽 수를 찾는 중....'):
+	corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
+	id2word = st.session_state.dictionary
+	show_coherence(corpus, id2word)
     
         NUM = st.number_input('토픽 수를 선택하세요', min_value=4, max_value=11, value=7, step=1)
         st.session_state.num =NUM
