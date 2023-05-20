@@ -377,7 +377,7 @@ if choose == "LDA TM":
         st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
                        
         tokenizer_ = st.selectbox('어떤 형태소 분석기를 선택할까요?', ('Okt', 'Kkma', 'Kiwi'))
-	if tokenizer_ == 'Kiwi':
+        if tokenizer_ == 'Kiwi':
             with st.spinner('Kiwi를 이용해 명사를 추출하고있습니다.....'):                       
               kiwi=Kiwi() 
               extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
@@ -401,53 +401,55 @@ if choose == "LDA TM":
             st.session_state.text = text
         
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
-            st.write('[확인] 전체 명사 수는', len(tokenized_doc)) 
-	
-	if tokenizer_ == 'Okt':
-		with st.spinner('Okt를 이용해 명사를 추출하고있습니다.....'):                       
-			okt=Okt() 
+            st.write('[확인] 전체 명사 수는', len(tokenized_doc))       
+            
+        if tokenizer_ == 'Okt':
+            with st.spinner('Okt를 이용해 명사를 추출하고있습니다.....'):                       
+              okt=Okt() 
+              
+              tokenized_doc=[]
+              for words in text:
+                  nouns_ = [] 
+                  for word in okt.nouns(words):
+                      if len(word) > 1 :
+                          nouns_.append(word[0])     
+                  tokenized_doc.append(nouns_)
+				
+                  
+              dictionary = corpora.Dictionary(tokenized_doc)
+              dictionary.filter_extremes(no_below=5, no_above=0.5)
+            st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
 
-			tokenized_doc=[]
-			for words in text:
-				nouns_ = [] 
-				for word in okt.nouns(words):
-				    if len(word) > 1 :
-					nouns_.append(word)     
-				tokenized_doc.append(nouns_)
-
-
-			dictionary = corpora.Dictionary(tokenized_doc)
-			dictionary.filter_extremes(no_below=5, no_above=0.5)
-		st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
-		st.write('[확인] 전체 명사 수는', len(tokenized_doc))
-		st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
-
-		st.session_state.tokenized_doc = tokenized_doc
-		st.session_state.dictionary = dictionary
-		st.session_state.text = text
+            st.session_state.tokenized_doc = tokenized_doc
+            st.session_state.dictionary = dictionary
+            st.session_state.text = text
         
-	if tokenizer_ == 'Kkma':
-		with st.spinner('Kkma를 이용해 명사를 추출하고있습니다.....'):                       
-			kkma=Kkma() 
-			tokenized_doc=[]
-			for words in text:
-				nouns_ = [] 
-				for word in kkma.nouns(words):
-				    if len(word) > 1 :
-					nouns_.append(word)     
-				tokenized_doc.append(nouns_)
+            st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+            st.write('[확인] 전체 명사 수는', len(tokenized_doc))         
 
-			dictionary = corpora.Dictionary(tokenized_doc)
-			dictionary.filter_extremes(no_below=5, no_above=0.5)
-		st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
-		st.write('[확인] 전체 명사 수는', len(tokenized_doc))
-		st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+        if tokenizer_ == 'Kkma':
+            with st.spinner('Kkma를 이용해 명사를 추출하고있습니다.....'):                       
+              kkma=KKma() 
+              
+              tokenized_doc=[]
+              for words in text:
+                  nouns_ = [] 
+                  for word in kkma.nouns(words):
+                      if len(word) > 1 :
+                          nouns_.append(word[0])     
+                  tokenized_doc.append(nouns_)
+				
+                  
+              dictionary = corpora.Dictionary(tokenized_doc)
+              dictionary.filter_extremes(no_below=5, no_above=0.5)
+            st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
 
-		st.session_state.tokenized_doc = tokenized_doc
-		st.session_state.dictionary = dictionary
-		st.session_state.text = text
-
-		          
+            st.session_state.tokenized_doc = tokenized_doc
+            st.session_state.dictionary = dictionary
+            st.session_state.text = text
+        
+            st.write('[확인] 첫번째 논문에 등장하는 단어들은', tokenized_doc[0])
+            st.write('[확인] 전체 명사 수는', len(tokenized_doc))            
             with st.expander('3개의 워드클라우드를 생성'):
 
                 top_nouns_from_corpora = dict(st.session_state.dictionary.most_common())
@@ -552,7 +554,7 @@ if choose == "LDA TM":
                     py_lda_vis_data = pyLDAvis.gensim_models.prepare(model, corpus, st.session_state.dictionary)
                     py_lda_vis_html = pyLDAvis.prepared_data_to_html(py_lda_vis_data)
                 with st.expander('pyLDAvis', expanded=True):
-                    components.html(py_lda_vis_html, width=1300, height=800)   
+                    components.html(py_lda_vis_html, width=1300, height=800)    
 		
 if choose == "Bertopic":
     st.header('Bertopic (LLM)')
