@@ -121,7 +121,7 @@ if choose == "Crawl":
         with st.spinner('논문을 수집하고 있습니다....'):
            tab1, tab2 = st.tabs(["학술논문", "학위논문"])
 
-          with tab1:
+           with tab1:
               url1 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=bib_t&colName=re_a_kor&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={max_num1}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}\&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
               result1 = requests.get(url1, headers=HEADERS)
               soup1 = bs(result1.text, 'html.parser')
@@ -157,52 +157,52 @@ if choose == "Crawl":
               'link': link,
               'abstracts': abstracts}
       )
-            st.balloons()
-            st.success("학술 논문 수집에 성공하였습니다.")
+              st.balloons()
+              st.success("학술 논문 수집에 성공하였습니다.")
 
-            st.dataframe(df1)
-            
-          with tab2:        
+              st.dataframe(df1)
+                       
+           with tab2:        
                    
               url2 = f'http://www.riss.kr/search/Search.do?isDetailSearch=N&searchGubun=true&viewYn=OP&query={keyword}&queryText=&iStartCount=0&iGroupView=5&icate=re_a_kor&colName=bib_t&exQuery=&exQueryText=&order=%2FDESC&onHanja=false&strSort=RANK&pageScale={max_num2}&orderBy=&fsearchMethod=search&isFDetailSearch=N&sflag=1&searchQuery={keyword}&fsearchSort=&fsearchOrder=&limiterList=&limiterListText=&facetList=&facetListText=&fsearchDB=&resultKeyword={keyword}&pageNumber=1&p_year1=&p_year2=&dorg_storage=&mat_type=&mat_subtype=&fulltext_kind=&t_gubun=&learning_type=&language_code=&ccl_code=&language=&inside_outside=&fric_yn=&image_yn=&regnm=&gubun=&kdc=&ttsUseYn='
               result2 = requests.get(url2, headers=HEADERS)
               soup2 = bs(result2.text, 'html.parser')
                             contents2 = soup2.find_all('div', class_='cont ml60')
     
-          title = []
-          writer =[]
-          publisher = []
-          year = []
-          journal = []
-          link = []
-          abstracts = []
+              title = []
+              writer =[]
+              publisher = []
+              year = []
+              journal = []
+              link = []
+              abstracts = []
 
-          for cont in contents2:
-              title.append(cont.find('p', class_='title').text)
-              writer.append(cont.find('span', class_='writer').text)
-              publisher.append(cont.find('span', class_='assigned').text)
-              year.append(cont.find('p', class_='etc').find_all('span')[2].text)
-              journal.append(cont.find('p', class_='etc').find_all('span')[3].text)
-              link.append("https://www.riss.kr"+cont.find('p', class_='title').find('a')['href'])
+              for cont in contents2:
+                  title.append(cont.find('p', class_='title').text)
+                  writer.append(cont.find('span', class_='writer').text)
+                  publisher.append(cont.find('span', class_='assigned').text)
+                  year.append(cont.find('p', class_='etc').find_all('span')[2].text)
+                  journal.append(cont.find('p', class_='etc').find_all('span')[3].text)
+                  link.append("https://www.riss.kr"+cont.find('p', class_='title').find('a')['href'])
 
-              if cont.find('p', class_='preAbstract'):
-                  abstracts.append(cont.find('p', class_='preAbstract').text)
-              else :
-                  abstracts.append('No_Abstracts')
+                  if cont.find('p', class_='preAbstract'):
+                      abstracts.append(cont.find('p', class_='preAbstract').text)
+                  else :
+                      abstracts.append('No_Abstracts')
 
-          df2 = pd.DataFrame(
-          {'title':title,
-          'writer': writer,
-          'publisher': publisher,
-          'year': year,
-          'journal': journal,
-          'link': link,
-          'abstracts': abstracts}
-      )
-          st.balloons()
-          st.success("학위 논문 수집에 성공하였습니다.")
+              df2 = pd.DataFrame(
+              {'title':title,
+              'writer': writer,
+              'publisher': publisher,
+              'year': year,
+              'journal': journal,
+              'link': link,
+              'abstracts': abstracts}
+          )
+              st.balloons()
+              st.success("학위 논문 수집에 성공하였습니다.")
 
-          st.dataframe(df2)
+              st.dataframe(df2)
         
         st.write('학술 논문과 학위 논문을 하나로 만듭니다.')
         df = pd.concat([df1,df2], ignore_index=True)
