@@ -519,72 +519,74 @@ if choose == "LDA TM":
         
 if choose == "Bertopic":
     st.header('Bertopic (LLM)')
-    uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
-    if uploaded_file is not None:
-        bytes_data = uploaded_file.getvalue()
-        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-        string_data = stringio.read()
-        df = pd.read_csv(uploaded_file)
-        st.write('처음 5개 데이터 확인')
-        st.dataframe(df.head())
+    model1 = BERTopic.load("./model/my_model1")
+    st.header("Visualizations")
+    st.plotly_chart(model1.visualize_topics())
+    st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+    st.plotly_chart(model1.visualize_heatmap())
+    st.plotly_chart(model1.visualize_hierarchy())
+    st.plotly_chart(model1.visualize_term_rank())
+    
+    
+#     uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
+#     if uploaded_file is not None:
+#         bytes_data = uploaded_file.getvalue()
+#         stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+#         string_data = stringio.read()
+#         df = pd.read_csv(uploaded_file)
+#         st.write('처음 5개 데이터 확인')
+#         st.dataframe(df.head())
            
-#         df_with_abs = df[df.abstracts != 'No_Abstracts']
-#         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
+# #         df_with_abs = df[df.abstracts != 'No_Abstracts']
+# #         df_with_abs = df_with_abs.abstracts.str.replace('[^가-힣]',' ', regex=True).replace('\s+',' ', regex=True)
     
-#         text = df_with_abs.to_list()
-        text = df.title.to_list()
-#         st.write('초록이 있는 논문 수', len(text))
+# #         text = df_with_abs.to_list()
+#         text = df.title.to_list()
+# #         st.write('초록이 있는 논문 수', len(text))
     
-        # 토크나이저에 명사만 추가한다
-        st.write('명사를 추출합니다..')
+#         # 토크나이저에 명사만 추가한다
+#         st.write('명사를 추출합니다..')
 
-        extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
-        stopwords = Stopwords()
-        stopwords.add(('토픽', 'NNG'))
-        stopwords.add(('모델링', 'NNG'))
+#         extract_pos_list = ["NNG", "NNP", "NNB", "NR", "NP"]
+#         stopwords = Stopwords()
+#         stopwords.add(('토픽', 'NNG'))
+#         stopwords.add(('모델링', 'NNG'))
         
-        class CustomTokenizer:
-            def __init__(self, kiwi):
-                self.kiwi = kiwi
-            def __call__(self, text):
-                result = list()
-                for word in self.kiwi.tokenize(text,  stopwords=stopwords):
-                    # 명사이고, 길이가 2이상인 단어이고, 불용어 리스트에 없으면 추가하기
-                    if word[1] in extract_pos_list and len(word[0]) > 1 :
-                         result.append(word[0])
-                return result
+#         class CustomTokenizer:
+#             def __init__(self, kiwi):
+#                 self.kiwi = kiwi
+#             def __call__(self, text):
+#                 result = list()
+#                 for word in self.kiwi.tokenize(text,  stopwords=stopwords):
+#                     # 명사이고, 길이가 2이상인 단어이고, 불용어 리스트에 없으면 추가하기
+#                     if word[1] in extract_pos_list and len(word[0]) > 1 :
+#                          result.append(word[0])
+#                 return result
                 
          
-        custom_tokenizer = CustomTokenizer(Kiwi())
-        vectorizer = CountVectorizer(tokenizer=custom_tokenizer, max_features=300)
-#         st.write('CountVertorizer  생성 완료!', vectorizer)
+#         custom_tokenizer = CustomTokenizer(Kiwi())
+#         vectorizer = CountVectorizer(tokenizer=custom_tokenizer, max_features=300)
+# #         st.write('CountVertorizer  생성 완료!', vectorizer)
 
-        with st.expander('xlm-r-100langs-bert 모델'):
-          with st.spinner('BERTopic 모델 훈련 중 ...'):
-            model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
-            vectorizer_model=vectorizer,
-            nr_topics=10, # 문서를 대표하는 토픽의 갯수
-            top_n_words=10,
-            calculate_probabilities=True)
+#         with st.expander('xlm-r-100langs-bert 모델'):
+#           with st.spinner('BERTopic 모델 훈련 중 ...'):
+#             model1 = BERTopic(embedding_model="sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens", \
+#             vectorizer_model=vectorizer,
+#             nr_topics=10, # 문서를 대표하는 토픽의 갯수
+#             top_n_words=10,
+#             calculate_probabilities=True)
 
-            # tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
-            # model = AutoModel.from_pretrained("beomi/kcbert-base")
+#             # tokenizer = AutoTokenizer.from_pretrained("beomi/kcbert-base")
+#             # model = AutoModel.from_pretrained("beomi/kcbert-base")
 
-            # model1 = BERTopic(embedding_model=model, language="korean", 
-            #                   # top_n_words=10, nr_topics= Nr_topics, 
-            #                   calculate_probabilities=False, verbose=False)
-            # model1.fit(text)
-            topics, probs = model1.fit_transform(text)
+#             # model1 = BERTopic(embedding_model=model, language="korean", 
+#             #                   # top_n_words=10, nr_topics= Nr_topics, 
+#             #                   calculate_probabilities=False, verbose=False)
+#             # model1.fit(text)
+#             topics, probs = model1.fit_transform(text)
         
-            st.dataframe(model1.get_topic_info())
-            st.header("Visualizations")
+#             st.dataframe(model1.get_topic_info())
 
-
-            st.plotly_chart(model1.visualize_topics())
-            st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-            st.plotly_chart(model1.visualize_heatmap())
-            st.plotly_chart(model1.visualize_hierarchy())
-            st.plotly_chart(model1.visualize_term_rank())
     
             # with st.expander('beomi/kcbert-base 모델'):
                 
