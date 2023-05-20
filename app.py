@@ -373,7 +373,7 @@ if choose == "LDA TM":
                             nouns_.append(word[0])     
                     tokenized_doc.append(nouns_)
                 Bigram_Model = gensim.models.Phrases(tokenized_doc, min_count=2, delimiter=" ")
-                bigram_tokenized_docs = []
+                bigram_tokenized_doc = []
                 for doc in tokenized_doc:
                     a = Bigram_Model[doc]
                     bigram_tokenized_doc.append(a)
