@@ -519,13 +519,30 @@ if choose == "LDA TM":
         
 if choose == "Bertopic":
     st.header('Bertopic (LLM)')
-    model1 = BERTopic.load("./model/my_model1")
-    st.header("Visualizations")
-    st.plotly_chart(model1.visualize_topics())
-    st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-    st.plotly_chart(model1.visualize_heatmap())
-    st.plotly_chart(model1.visualize_hierarchy())
-    st.plotly_chart(model1.visualize_term_rank())
+    model = st.radio ("어떤 모델을 선택하시겠습니까?", ['model1', 'model2', 'model3', 'model4' ])
+    tab1, tab2, tab3, tab4 = st.tabs(['model1', 'model2', 'model3', 'model4'])
+
+    with tab1:
+        if model == 'model1':
+            model1 = BERTopic.load("./model/my_model1")
+            st.header("Visualizations")
+            st.plotly_chart(model1.visualize_topics())
+            st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+            st.plotly_chart(model1.visualize_heatmap())
+            st.plotly_chart(model1.visualize_hierarchy())
+            st.plotly_chart(model1.visualize_term_rank())
+
+    with tab2:
+        if model == 'model2':
+            st.write('ffff')
+            
+    with tab3:
+        if model == 'model3':
+            st.write('ffff')
+    with tab4:
+        if model == 'model4':
+            st.write('ㄹㄴㅇㄹㄴ')
+
     
     
 #     uploaded_file = st.file_uploader("수집한 csv파일을 업로드하세요.")
