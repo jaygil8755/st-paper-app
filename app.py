@@ -376,7 +376,7 @@ if choose == "LDA TM":
         text = df_kor_text.to_list()
         st.write('[확인] 처음 3개 text 시예시 (제목 + 초록)', text[:3])
 	
-	if st.checkbox('명사 추출):                      
+	if st.checkbox('명사 추출'):                      
 
 
             with st.spinner('Kiwi를 이용해 명사를 추출하고있습니다.....'):                       
