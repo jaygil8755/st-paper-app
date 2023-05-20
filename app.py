@@ -381,12 +381,14 @@ if choose == "LDA TM":
             st.write('[확인] 첫번째 논문에 등장하는 단어들은', bigram_tokenized_doc[0])
 
             dictionary = corpora.Dictionary(bigram_tokenized_doc)
-            dictionary.filter_extremes(no_below=5, no_above=0.5)
+            dictionary.filter_extremes(no_below=5, no_above=0.4)
             st.write('#자주 등장하거나 등장횟수가 적은 명사 제외한 단어는:', len(dictionary))
+            
     
             st.session_state.bigram_tokenized_doc = bigram_tokenized_doc
             st.session_state.dictionary = dictionary
             st.session_state.text = text
+            st.write('가장 빈도수가 높은 단어 Top 10:', st.session_state.dictionary.most_common(10))
     
             with st.expander('3개의 워드클라우드를 생성'):
     
@@ -464,7 +466,7 @@ if choose == "LDA TM":
                     st.pyplot(fig2)
     
             with st.spinner('최적의 토픽 수를 찾는 중....'):
-                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
+                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.bigram_tokenized_doc]
                 id2word = st.session_state.dictionary
                 show_coherence(corpus, id2word)
     
@@ -478,7 +480,7 @@ if choose == "LDA TM":
     
             with st.spinner('LDA 모델 훈련 중 ...'):
     
-                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.tokenized_doc]
+                corpus = [st.session_state.dictionary.doc2bow(text) for text in st.session_state.bigram_tokenized_doc]
                 model = gensim.models.LdaModel(corpus, id2word=st.session_state.dictionary, num_topics=st.session_state.num)
     
                 topics = model.show_topics(formatted=False, num_words=50,
