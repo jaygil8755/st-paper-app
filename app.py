@@ -529,36 +529,36 @@ if choose == "Bertopic":
     tab1, tab2, tab3, tab4 = st.tabs(['MiniLM', 'distil', 'ko', 'my model'])
 
     with tab1:
-          model1 = BERTopic.load("./model/MiniLM_model (1)")
+          model1 = BERTopic.load("./model/MiniLM_model")
           st.header("Visualizations")
           st.write('embedding_model:paraphrase-multilingual-MiniLM-L12-v2')
-          st.plotly_chart(MiniLM_model (1).visualize_topics())
-          st.plotly_chart(MiniLM_model (1).visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(MiniLM_model (1).visualize_heatmap())
-          st.plotly_chart(MiniLM_model (1).visualize_hierarchy())
-          st.plotly_chart(MiniLM_model (1).visualize_term_rank())
+          st.plotly_chart(model1.visualize_topics())
+          st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(model1.visualize_heatmap())
+          st.plotly_chart(model1.visualize_hierarchy())
+          st.plotly_chart(model1.visualize_term_rank())
 
     with tab2:
 
           model2 = BERTopic.load("./model/distil_model")
           st.header("Visualizations")
           st.write('embedding_model:distiluse-base-multilingual-cased-v1') 
-          st.plotly_chart(distil_model.visualize_topics())
-          st.plotly_chart(distil_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(distil_model.visualize_heatmap())
-          st.plotly_chart(distil_model.visualize_hierarchy())
-          st.plotly_chart(distil_model.visualize_term_rank())
+          st.plotly_chart(model2.visualize_topics())
+          st.plotly_chart(model2.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(model2.visualize_heatmap())
+          st.plotly_chart(model2.visualize_hierarchy())
+          st.plotly_chart(model2.visualize_term_rank())
             
     with tab3:
 
           model3 = BERTopic.load("./model/ko_model")
           st.header("Visualizations")
           st.write('embedding_model:jhgan/ko-sroberta-multitask') 
-          st.plotly_chart(ko_model.visualize_topics())
-          st.plotly_chart(ko_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(ko_model.visualize_heatmap())
-          st.plotly_chart(ko_model.visualize_hierarchy())
-          st.plotly_chart(ko_model.visualize_term_rank())
+          st.plotly_chart(model3.visualize_topics())
+          st.plotly_chart(model3.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(model3.visualize_heatmap())
+          st.plotly_chart(model3.visualize_hierarchy())
+          st.plotly_chart(model3.visualize_term_rank())
 
     with tab4:
 
