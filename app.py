@@ -518,25 +518,25 @@ if choose == "LDA TM":
                     components.html(py_lda_vis_html, width=1300, height=800)   
         
 if choose == "Bertopic":
-    st.header('Bertopic (LLM)')
-    st.markdown("임베딩 모델 이름을 확인하세요..")
-    st.info('model1 = "sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens"')
-    st.info('model2 = "sentence-transformers/paraphrase-MiniLM-L3-v2"')
-    st.info('model3 = "sentence-transformers/all-mpnet-base-v2"')
-    st.info('model4 = "jhgan/ko-sroberta-multitask"')
+#     st.header('Bertopic (LLM)')
+#     st.markdown("임베딩 모델 이름을 확인하세요..")
+#     st.info('model1 = "sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens"')
+#     st.info('model2 = "sentence-transformers/paraphrase-MiniLM-L3-v2"')
+#     st.info('model3 = "sentence-transformers/all-mpnet-base-v2"')
+#     st.info('model4 = "jhgan/ko-sroberta-multitask"')
 
 #     model = st.radio ("어떤 모델을 선택하시겠습니까?", ['MiniLM', 'distil', 'ko', 'my model' ])
     tab1, tab2, tab3, tab4 = st.tabs(['MiniLM', 'distil', 'ko', 'my model'])
 
     with tab1:
-          model1 = BERTopic.load("./model/MiNiLM_model")
+          model1 = BERTopic.load("./model/MiniLM_model")
           st.header("Visualizations")
           st.write('embedding_model:paraphrase-multilingual-MiniLM-L12-v2')
-          st.plotly_chart(MiNiLM_model.visualize_topics())
-          st.plotly_chart(MiNiLM_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(MiNiLM_model.visualize_heatmap())
-          st.plotly_chart(MiNiLM_model.visualize_hierarchy())
-          st.plotly_chart(MiNiLM_model.visualize_term_rank())
+          st.plotly_chart(MiniLM_model.visualize_topics())
+          st.plotly_chart(MiniLM_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(MiniLM_model.visualize_heatmap())
+          st.plotly_chart(MiniLM_model.visualize_hierarchy())
+          st.plotly_chart(MiniLM_model.visualize_term_rank())
 
     with tab2:
 
