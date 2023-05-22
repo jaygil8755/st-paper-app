@@ -525,47 +525,45 @@ if choose == "Bertopic":
     st.info('model3 = "sentence-transformers/all-mpnet-base-v2"')
     st.info('model4 = "jhgan/ko-sroberta-multitask"')
 
-#     model = st.radio ("어떤 모델을 선택하시겠습니까?", ['model1', 'model2', 'model3', 'model4' ])
-    tab1, tab2, tab3, tab4 = st.tabs(['model1', 'model2', 'model3', 'model4'])
+#     model = st.radio ("어떤 모델을 선택하시겠습니까?", ['MiniLM', 'distil', 'ko', 'my model' ])
+    tab1, tab2, tab3, tab4 = st.tabs(['MiniLM', 'distil', 'ko', 'my model'])
 
     with tab1:
-          model1 = BERTopic.load("./model/my_model1")
+          model1 = BERTopic.load("./model/MiNiLM_model")
           st.header("Visualizations")
-          st.plotly_chart(model1.visualize_topics())
-          st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(model1.visualize_heatmap())
-          st.plotly_chart(model1.visualize_hierarchy())
-          st.plotly_chart(model1.visualize_term_rank())
+          st.write('embedding_model:paraphrase-multilingual-MiniLM-L12-v2')
+          st.plotly_chart(MiNiLM_model.visualize_topics())
+          st.plotly_chart(MiNiLM_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(MiNiLM_model.visualize_heatmap())
+          st.plotly_chart(MiNiLM_model.visualize_hierarchy())
+          st.plotly_chart(MiNiLM_model.visualize_term_rank())
 
     with tab2:
 
-          model2 = BERTopic.load("./model/my_model2")
+          model2 = BERTopic.load("./model/distil_model")
           st.header("Visualizations")
-          st.plotly_chart(model2.visualize_topics())
-          st.plotly_chart(model2.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(model2.visualize_heatmap())
-          st.plotly_chart(model2.visualize_hierarchy())
-          st.plotly_chart(model2.visualize_term_rank())
+          st.write('embedding_model:distiluse-base-multilingual-cased-v1') 
+          st.plotly_chart(distil_model.visualize_topics())
+          st.plotly_chart(distil_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(distil_model.visualize_heatmap())
+          st.plotly_chart(distil_model.visualize_hierarchy())
+          st.plotly_chart(distil_model.visualize_term_rank())
             
     with tab3:
 
-          model3 = BERTopic.load("./model/my_model3")
+          model3 = BERTopic.load("./model/ko_model")
           st.header("Visualizations")
-          st.plotly_chart(model3.visualize_topics())
-          st.plotly_chart(model3.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(model3.visualize_heatmap())
-          st.plotly_chart(model3.visualize_hierarchy())
-          st.plotly_chart(model3.visualize_term_rank())
+          st.write('embedding_model:jhgan/ko-sroberta-multitask') 
+          st.plotly_chart(ko_model.visualize_topics())
+          st.plotly_chart(ko_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(ko_model.visualize_heatmap())
+          st.plotly_chart(ko_model.visualize_hierarchy())
+          st.plotly_chart(ko_model.visualize_term_rank())
 
     with tab4:
 
-          model4 = BERTopic.load("./model/my_model4")
           st.header("Visualizations")
-          st.plotly_chart(model4.visualize_topics())
-          st.plotly_chart(model4.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(model4.visualize_heatmap())
-          st.plotly_chart(model4.visualize_hierarchy())
-          st.plotly_chart(model4.visualize_term_rank())
+          
 
     
     
