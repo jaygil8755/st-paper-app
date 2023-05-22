@@ -529,14 +529,14 @@ if choose == "Bertopic":
     tab1, tab2, tab3, tab4 = st.tabs(['MiniLM', 'distil', 'ko', 'my model'])
 
     with tab1:
-          model1 = BERTopic.load("./model/MiniLM_model")
+          model1 = BERTopic.load("./model/MiniLM_model (1)")
           st.header("Visualizations")
           st.write('embedding_model:paraphrase-multilingual-MiniLM-L12-v2')
-          st.plotly_chart(MiniLM_model.visualize_topics())
-          st.plotly_chart(MiniLM_model.visualize_barchart(top_n_topics = 9990, n_words = 9999))
-          st.plotly_chart(MiniLM_model.visualize_heatmap())
-          st.plotly_chart(MiniLM_model.visualize_hierarchy())
-          st.plotly_chart(MiniLM_model.visualize_term_rank())
+          st.plotly_chart(MiniLM_model (1).visualize_topics())
+          st.plotly_chart(MiniLM_model (1).visualize_barchart(top_n_topics = 9990, n_words = 9999))
+          st.plotly_chart(MiniLM_model (1).visualize_heatmap())
+          st.plotly_chart(MiniLM_model (1).visualize_hierarchy())
+          st.plotly_chart(MiniLM_model (1).visualize_term_rank())
 
     with tab2:
 
