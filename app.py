@@ -531,7 +531,7 @@ if choose == "Bertopic":
     with tab1:
           model1 = BERTopic.load("./model/MiniLM_model")
           st.header("Visualizations")
-          st.info('embedding_model:paraphrase-multilingual-MiniLM-L12-v2')
+          st.info('embedding_model => paraphrase-multilingual-MiniLM-L12-v2')
           st.plotly_chart(model1.visualize_topics())
           st.plotly_chart(model1.visualize_barchart(top_n_topics = 9990, n_words = 9999))
           st.plotly_chart(model1.visualize_heatmap())
@@ -542,7 +542,7 @@ if choose == "Bertopic":
 
           model2 = BERTopic.load("./model/distil_model")
           st.header("Visualizations")
-          st.info('embedding_model:distiluse-base-multilingual-cased-v1') 
+          st.info('embedding_model => distiluse-base-multilingual-cased-v1') 
           st.plotly_chart(model2.visualize_topics())
           st.plotly_chart(model2.visualize_barchart(top_n_topics = 9990, n_words = 9999))
           st.plotly_chart(model2.visualize_heatmap())
@@ -553,7 +553,7 @@ if choose == "Bertopic":
 
           model3 = BERTopic.load("./model/ko_model")
           st.header("Visualizations")
-          st.info('embedding_model:jhgan/ko-sroberta-multitask') 
+          st.info('embedding_model => jhgan/ko-sroberta-multitask') 
           st.plotly_chart(model3.visualize_topics())
           st.plotly_chart(model3.visualize_barchart(top_n_topics = 9990, n_words = 9999))
           st.plotly_chart(model3.visualize_heatmap())
